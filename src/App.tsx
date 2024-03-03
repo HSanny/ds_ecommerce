@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { PropsWithChildren } from 'react'
+import { createBrowserRouter, BrowserRouter, Routes, Route, RouterProvider, Outlet } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import ScrollPage from './components/common/ScrollPage';
+import NaviBar from './components/NaviBar';
+
+const routes = [
+  {
+    path: "/",
+    component: <HomePage />,
+    name: "HomePage"
+  }
+]
 
 function App() {
+  const AppRoutes = createBrowserRouter([
+    {
+      path: '/',
+      element: <Layout />,
+      children: [
+        {
+          index: true,
+          path: '/',
+          element: <HomePage />
+        }
+      ]
+    },
+  ])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RouterProvider router={AppRoutes} />
+    // <BrowserRouter>
+    //   <Routes>
+    //     {routes.map((route) => (
+    //       <Route
+    //         path={route.path}
+    //         element={route.component}
+    //       />
+    //     ))}
+    //   </Routes>
+    // </BrowserRouter>
   );
 }
 
 export default App;
+
+const Layout = () => {
+  return (
+    <>
+      <ScrollPage />
+      <NaviBar />
+      <Outlet /> {/* This will render the child routes */}
+      {/* <Footer /> Add your Footer component here if needed */}
+    </>
+  )
+}
