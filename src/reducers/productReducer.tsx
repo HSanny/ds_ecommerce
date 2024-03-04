@@ -10,6 +10,65 @@ import {
 } from "../actions/productActions";
 import { productDataType, initialProductsStateType } from "../types/productType";
 
+let productA = {
+    "id": "001",
+    "name": "AAA",
+    "slug": "AAA",
+    "brand?": "AAA",
+    "categories": "AAA",
+    "clothingCategories?": "AAA", // add in schema
+    "price": 50,
+    "stock": 50,
+    "forWhom": "AAA",
+    "height?": "AAA",
+    "heightDescription?": "AAA",
+    "age?": "AAA",
+    "ageDescription": "AAA",
+    "itemDescription": "AAA",
+    "featured": true,
+    "images": ["AAA", "AAA"],
+}
+
+let productB = {
+    "id": "002",
+    "name": "BBB",
+    "slug": "BBB",
+    "brand?": "BBB",
+    "categories": "BBB",
+    "clothingCategories?": "BBB", // add in schema
+    "price": 88,
+    "stock": 88,
+    "forWhom": "BBB",
+    "height?": "BBB",
+    "heightDescription?": "BBB",
+    "age?": "BBB",
+    "ageDescription": "BBB",
+    "itemDescription": "BBB",
+    "featured": true,
+    "images": ["BBB", "BBB"],
+}
+
+let productC = {
+    "id": "003",
+    "name": "CCC",
+    "slug": "CCC",
+    "brand?": "CCC",
+    "categories": "CCC",
+    "clothingCategories?": "CCC", // add in schema
+    "price": 11111,
+    "stock": 11111,
+    "forWhom": "CCC",
+    "height?": "CCC",
+    "heightDescription?": "CCC",
+    "age?": "CCC",
+    "ageDescription": "CCC",
+    "itemDescription": "CCC",
+    "featured": false,
+    "images": ["CCC", "CCC"],
+}
+
+let products = [ productA, productB, productC ];
+
 const productsReducer = (state: initialProductsStateType, action: any) => {
     if (action.type === SIDEBAR_OPEN) {
         return { ...state, isSidebarOpen: true }
@@ -25,25 +84,44 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
 
     if (action.type === GET_PRODUCTS_SUCCESS) {
         // fit data from API into productDataType shape
-        const allProducts = action.payload.map((product: any) => {
+        const allProducts = products.map((product: productDataType) => {
+        // const allProducts = action.payload.map((product: any) => {
             let {
-                _id: id,
+                id: id,
                 name,
+                slug,
                 brand,
-                category: {category},
+                categories,
+                clothingCategories, // might be null, need to flatten
                 price,
+                forWhom,
+                height, //need to flatten
+                heightDescription,
+                age, //need to flatten
+                ageDescription,
                 stock,
-                desc: itemDescription,
+                itemDescription,
+                featured,
+                images, //need to flatten
             } = product
 
             return {
                 id,
                 name,
+                slug,
                 brand,
-                category,
+                categories,
+                clothingCategories,
                 price,
                 stock,
+                forWhom,
+                height,
+                heightDescription,
+                age,
+                ageDescription,
                 itemDescription,
+                featured,
+                images,
             }
         })
         const featuredProducts = allProducts.filter(
