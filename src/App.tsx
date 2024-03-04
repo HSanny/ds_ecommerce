@@ -3,6 +3,8 @@ import { createBrowserRouter, BrowserRouter, Routes, Route, RouterProvider, Outl
 import HomePage from './pages/HomePage';
 import ScrollPage from './components/common/ScrollPage';
 import NaviBar from './components/NaviBar';
+import Footer from './components/Footer';
+import ProductsPage from './pages/ProductsPage';
 
 const routes = [
   {
@@ -22,7 +24,22 @@ function App() {
           index: true,
           path: '/',
           element: <HomePage />
-        }
+        },
+        {
+          index: true,
+          path: '/products',
+          element: <ProductsPage />
+        },
+        // {
+        //   index: true,
+        //   path: '/shipment',
+        //   element: <ShipmentPage />
+        // },
+        // {
+        //   index: true,
+        //   path: '/cart',
+        //   element: <CartPage />
+        // }
       ]
     },
   ])
@@ -50,6 +67,7 @@ const Layout = () => {
       <NaviBar />
       <Outlet /> {/* This will render the child routes */}
       {/* <Footer /> Add your Footer component here if needed */}
+      <Footer />
     </>
   )
 }

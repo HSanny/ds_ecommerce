@@ -11,6 +11,9 @@ import {
     GET_SINGLE_PRODUCT_ERROR,
 } from "../actions/productActions";
 import { initialProductsStateType, productDataType } from "../types/productType";
+import { API_ENDPOINT, QUERY } from "../utils/constants";
+import axios from "axios"
+
 
 const initialProductsState: initialProductsStateType = {
     isSidebarOpen: false,
@@ -42,13 +45,13 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: SIDEBAR_CLOSE })
     }
 
-    const fetchSingleProduct = (name: string) => {
+    const fetchSingleProduct = (slug: string) => {
         dispatch({
             type: GET_SINGLE_PRODUCT_BEGIN
         })
         try {
             const singleProduct: productDataType = state.allProducts.filter(
-                (product: productDataType) => product.name === name 
+                (product: productDataType) => product.slug === slug 
             )[0]
 
             if (singleProduct) {
@@ -64,6 +67,29 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             })
         }
     }
+
+    // Fetch all products
+    React.useEffect(() => {
+        const fetchAllProducts = async () => {
+            dispatch({ tpye: GET_PRODUCTS_BEGIN })
+            try {
+                const queryResult = await axios.post(API_ENDPOINT, { query: QUERY })
+                const result = queryResult.data.data.allProduct
+                dispatch({ 
+                    type: GET_PRODUCTS_SUCCESS,
+                    payload: result
+                 }) 
+            } catch(error) {
+                console.log(error)
+                dispatch({
+                    type: GET_PRODUCTS_ERROR
+                })
+            }
+        }
+        fetchAllProducts()
+    }, [])
+
+
 
     return (
         <ProductsContext.Provider value={{ ...state, openSidebar, closeSidebar, fetchSingleProduct}}>

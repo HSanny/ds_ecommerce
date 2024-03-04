@@ -23,3 +23,5 @@ const CartButtons = () => {
         </CartButtonsWrapper>
     )
 }
+
+export default CartButtons;

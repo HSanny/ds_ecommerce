@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useProductsContext } from "../utils/productsContext";
+import SingleProduct from "./SingleProduct";
 
 const FeaturedProduct = () => {
-    // const { featuredProducts } = useProductsContext();
+    const { featuredProducts } = useProductsContext();
 
     return (
         <Wrapper className="section">
@@ -13,13 +15,13 @@ const FeaturedProduct = () => {
                 <div className="underline"/>
             </div>
             {/* Featured Product */}
-            {/* <div>
+            <div>
                 {featuredProducts && 
                     featuredProducts.map(product => (
-                        <Product key={ product.id}  product={ product } />
+                        <SingleProduct key={ product.id}  product={ product } />
                     ))
                 }
-            </div> */}
+            </div>
 
             <Link to="" className="btn">
                 All Product

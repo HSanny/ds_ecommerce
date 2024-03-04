@@ -15,3 +15,45 @@ export const links = [
         url: '/products',
     },
 ]
+
+export const API_ENDPOINT = "https://bqk6gkzk.api.sanity.io/v1/graphql/production/default"
+
+export const QUERY = `
+{
+  allProduct {
+    _id
+    name
+    slug {
+      current
+    }
+    brand
+    categories {
+      categories
+    }
+    clothingCategories {
+      clothingCategories
+    }
+    price
+    stock
+    forWhom {
+      forWhom
+    }
+    height {
+      height
+    }
+    heightDescription
+    age {
+      age
+    }
+    ageDescription
+    itemDescription
+    featured
+    images {
+      asset {
+        url
+      }
+    }
+  }
+}
+
+`
