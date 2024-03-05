@@ -15,7 +15,7 @@ let productA = {
     "name": "AAA",
     "slug": "AAA",
     "brand?": "AAA",
-    "categories": "AAA",
+    "category": "AAA",
     "clothingCategories?": "AAA", // add in schema
     "price": 50,
     "stock": 50,
@@ -34,7 +34,7 @@ let productB = {
     "name": "BBB",
     "slug": "BBB",
     "brand?": "BBB",
-    "categories": "BBB",
+    "category": "BBB",
     "clothingCategories?": "BBB", // add in schema
     "price": 88,
     "stock": 88,
@@ -53,7 +53,7 @@ let productC = {
     "name": "CCC",
     "slug": "CCC",
     "brand?": "CCC",
-    "categories": "CCC",
+    "category": "CCC",
     "clothingCategories?": "CCC", // add in schema
     "price": 11111,
     "stock": 11111,
@@ -91,7 +91,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
                 name,
                 slug,
                 brand,
-                categories,
+                category,
                 clothingCategories, // might be null, need to flatten
                 price,
                 forWhom,
@@ -110,7 +110,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
                 name,
                 slug,
                 brand,
-                categories,
+                category,
                 clothingCategories,
                 price,
                 stock,

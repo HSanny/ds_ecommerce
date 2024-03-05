@@ -6,7 +6,7 @@ export type productDataType = {
     name: string
     slug: string
     brand?: string
-    categories: string
+    category: string
     clothingCategories?: string // add in schema
     price: number
     stock: number

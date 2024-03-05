@@ -1,33 +1,33 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useProductsContext } from "../utils/productsContext";
+import { useProductsContext } from "../contexts/productsContext";
 import SingleProduct from "./SingleProduct";
 
 const FeaturedProduct = () => {
-    const { featuredProducts } = useProductsContext();
+  const { featuredProducts } = useProductsContext();
 
-    return (
-        <Wrapper className="section">
-            {/* Header */}
-            <div className="title">
-                <h2>Featured Product</h2>
-                <div className="underline"/>
-            </div>
-            {/* Featured Product */}
-            <div>
-                {featuredProducts && 
-                    featuredProducts.map(product => (
-                        <SingleProduct key={ product.id}  product={ product } />
-                    ))
-                }
-            </div>
+  return (
+    <Wrapper className="section">
+      {/* Header */}
+      <div className="title">
+        <h2>Featured Product</h2>
+        <div className="underline" />
+      </div>
+      {/* Featured Product */}
+      <div>
+        {featuredProducts &&
+          featuredProducts.map(product => (
+            <SingleProduct key={product.id} product={product} />
+          ))
+        }
+      </div>
 
-            <Link to="" className="btn">
-                All Product
-            </Link>
-        </Wrapper>
-    )
+      <Link to="" className="btn">
+        All Product
+      </Link>
+    </Wrapper>
+  )
 }
 
 export default FeaturedProduct;

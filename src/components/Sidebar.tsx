@@ -3,7 +3,7 @@ import SidebarWrapper from "./common/SidebarWrapper";
 import { Link } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import NaviLinks from "./NaviLinks";
-import { useProductsContext } from "../utils/productsContext";
+import { useProductsContext } from "../contexts/productsContext";
 
 const Sidebar = () => {
 
@@ -25,7 +25,7 @@ const Sidebar = () => {
                 {/* NaviLinks  */}
                 <NaviLinks className="links" isSidebar={true} />
                 {/* CartButtons */}
-                
+
             </aside>
         </SidebarWrapper>
     )

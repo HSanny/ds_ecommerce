@@ -1,8 +1,8 @@
 import CartButtonsWrapper from "./common/CartButtonsWrapper";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useCartContext } from "../utils/cartContext";
-import { useProductsContext } from "../utils/productsContext";
+import { useCartContext } from "../contexts/cartContext";
+import { useProductsContext } from "../contexts/productsContext";
 
 const CartButtons = () => {
 
