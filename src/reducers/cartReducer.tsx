@@ -9,7 +9,7 @@ import { cartType, initialStateType } from "../types/cartType";
 
 const cartReducer = (state: initialStateType, action: { type: any; payload?: any }) => {
     // Add tp Cart actopm
-    if (action.type == ADD_TO_CART) {
+    if (action.type === ADD_TO_CART) {
         const { id, amount, singleProduct } = action.payload;
         const tempItem = state.cart.find(item => item.id === id);
 

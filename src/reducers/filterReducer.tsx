@@ -30,12 +30,12 @@ const filterReducer = (
             ...state,
             allProducts: [...action.payload],
             filteredProducts: [...action.payload],
-            filter: { ...state.filter, maxPrice, price: maxPrice}
+            filter: { ...state.filter, maxPrice, price: maxPrice }
         }
     }
 
     if (action.type === SET_GRID_VIEW) {
-        return { ...state, gridView: true}
+        return { ...state, gridView: true }
     }
 
     if (action.type === SET_LIST_VIEW) {
@@ -43,12 +43,12 @@ const filterReducer = (
     }
 
     if (action.type === UPDATE_SORT) {
-        return { ...state, sort: action.payload}
+        return { ...state, sort: action.payload }
     }
 
     if (action.type === SORT_PRODUCTS) {
         let temp = [...state.filteredProducts]
-        
+
         if (state.sort === "price-lowest") {
             temp = temp.sort((a, b) => a.price - b.price)
         }
@@ -116,7 +116,7 @@ const filterReducer = (
             age: ageFilters,
             height: heightFilters,
         } = state.filter
-
+        console.log('search: ', search, 'filter: ', state.filter)
         let temp = [...allProducts]
         // filter by searchTerm
         if (search) {
@@ -127,6 +127,7 @@ const filterReducer = (
                     product.itemDescription.toLowerCase().includes(search.toLowerCase())
                 )
             })
+            console.log("temp: ", temp)
         }
         // category
         if (category !== 'all') {
@@ -177,7 +178,7 @@ const filterReducer = (
         })
 
         return { ...state, filteredProducts: temp }
-    
+
     }
 
     if (action.type === CLEAR_FILTERS) {

@@ -38,7 +38,12 @@ const Filter = () => {
                 placeholder="search"
                 className="search-input"
                 value={search}
-                onChange={e => updateFilter(e)}
+                onChange={
+                  e => {
+                    console.log(e)
+                    updateFilter(e)
+                  }
+                }
               />
             </div>
 
