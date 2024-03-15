@@ -1,9 +1,34 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useFilterContext } from "../contexts/filterContext";
+import { MdOutlineSmartToy } from "react-icons/md";
+import { GiClothes } from "react-icons/gi";
+import { FaBaby } from "react-icons/fa";
 
 const Services = () => {
-    // const { updateFilters, handleClickFromServices, clearFilters } = useFilterContext();
+    const { updateFilter, handleClickFromService, clearFilter } = useFilterContext();
+    const services = [
+      {
+        id: 1,
+        icon: <MdOutlineSmartToy />,
+        title: 'toy',
+        text: 'toy text',
+      },
+      {
+        id: 2,
+        icon: <GiClothes />,
+        title: 'clothing',
+        text: 'clothing text',
+      },
+      {
+        id: 3,
+        icon: <FaBaby />,
+        title: 'accessories',
+        text: 'accessories text',
+      },
+    ]
+  
     return (
         <Wrapper>
             <div className="section-center">
@@ -19,31 +44,31 @@ const Services = () => {
                     <p> Start browsing different types of products:</p>
                 </article>
                 {/* Service Cards */}
-                {/* <div className="services-center">
-                    {services.map((id, icon, title) => {
+                <div className="services-center">
+                    {services.map(service => {
                         return (
-                            <article key={ id } className="service">
-                                <span className="icon">{icon}</span>
-                                <h4>{title}</h4>
-                                <Link to=''>
+                            <article key={ service.id } className="service">
+                                <span className="icon">{service.icon}</span>
+                                <h4>{service.title}</h4>
+                                <Link to='/products'>
                                     <button
                                         className="btn"
                                         type="button"
                                         name="home-page-category"
-                                        value={title}
+                                        value={service.title}
                                         onClick={e => {
-                                            clearFilters()
-                                            handleClickFromServices()
-                                            updateFilters(e)
+                                            clearFilter()
+                                            handleClickFromService()
+                                            updateFilter(e)
                                         }}
                                     >
-                                        Click here for {title}
+                                        Click here for {service.title}
                                     </button>
                                 </Link>
                             </article>
                         )
                     })}
-                </div> */}
+                </div>
             </div>
         </Wrapper>
     )

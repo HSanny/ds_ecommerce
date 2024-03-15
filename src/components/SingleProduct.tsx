@@ -23,9 +23,9 @@ const SingleProduct = () => {
     }
   }, [slug, fetchSingleProduct])
 
-  // if (loading) return <Loading />
-  // if (error) return <Error />
-  // if (!singleProduct) return <NotFound />
+  if (loading) return <Loading />
+  if (error) return <Error />
+  if (!singleProduct) return <NotFound />
 
   // console.log("loading: ", loading)
   // console.log("error: ", error)
