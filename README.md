@@ -39,8 +39,60 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## Technology Used
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Frontend Development**
+- React.js
+- Typescript
+- styled-components
+- CSS
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Backend Development**
+- Python
+- FastAPI or Django or Flask
+
+**Content Management System (CMS)**
+- Sanity
+
+**Data Querying**
+- GraphQL over REST API
+
+**Data Fetching**
+- Axios or Fetch API
+
+**Payment Processing**
+- Stripe API
+
+**Hosting & Deployment**
+- Netlify for frontend
+- GCP or AWS for backend
+
+**Database**
+- PostgreSQL, MySQL, Oracle, SQL Server for relational
+- MongoDB for non-relational
+
+**Object Relational Mappers (ORM)**
+*this allows to interact with db in pythonic way, w/o much SQL*
+- SQL Alchemy (for FastAPI or Flask)
+- Django ORM (part of Django framework)
+  
+**Automated Tests**
+- unit tests
+- integration test
+- E2E
+
+**Version Control**
+- GitHub
+
+**CICD/DevOps Tools**
+- Jenkins
+- GitLab CI
+- AWS CodePipeline
+- Docker: can be used to containerize application
+- Kubernetes
+
+**IDE**
+- VS Code
+- Pycharm
+
+## Why use certain technology?
