@@ -12,18 +12,18 @@ const ListView: React.FC<{ filteredProducts: productDataType[] }> = ({
     return (
         <ListViewWrapper>
             {filteredProducts.map(product => {
-                const { slug, images, name, price, itemDescription } = product
+                const { id, image, main_category, name, actual_price } = product
                 return (
-                    <article key={slug}>
-                        <Link to={`/products/${slug}`}>
-                            <img src={images[0]} alt={name} />
+                    <article key={main_category}>
+                        <Link to={`/products/${id}`}>
+                            <img src={image} alt={name} />
                         </Link>
 
                         <div>
                             <h4>{name}</h4>
-                            <h5>{formatPrice(price)}</h5>
-                            <p>{itemDescription.substring(0, 150)}...</p>
-                            <Link to={`/products/${slug}`} className="btn">
+                            <h5>{formatPrice(parseInt(actual_price))}</h5>
+                            <p>{name.substring(0, 150)}...</p>
+                            <Link to={`/products/${id}`} className="btn">
                                 Details
                             </Link>
                         </div>

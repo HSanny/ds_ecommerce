@@ -10,66 +10,9 @@ import {
 } from "../actions/productActions";
 import { productDataType, initialProductsStateType } from "../types/productType";
 
-// let productA = {
-//     "id": "001",
-//     "name": "AAA",
-//     "slug": "AAA",
-//     "brand?": "AAA",
-//     "category": "AAA",
-//     "clothingCategories?": "AAA", // add in schema
-//     "price": 50,
-//     "stock": 50,
-//     "forWhom": "AAA",
-//     "height?": "AAA",
-//     "heightDescription?": "AAA",
-//     "age?": "AAA",
-//     "ageDescription": "AAA",
-//     "itemDescription": "AAA",
-//     "featured": true,
-//     "images": ["AAA", "AAA"],
-// }
-
-// let productB = {
-//     "id": "002",
-//     "name": "BBB",
-//     "slug": "BBB",
-//     "brand?": "BBB",
-//     "category": "BBB",
-//     "clothingCategories?": "BBB", // add in schema
-//     "price": 88,
-//     "stock": 88,
-//     "forWhom": "BBB",
-//     "height?": "BBB",
-//     "heightDescription?": "BBB",
-//     "age?": "BBB",
-//     "ageDescription": "BBB",
-//     "itemDescription": "BBB",
-//     "featured": true,
-//     "images": ["BBB", "BBB"],
-// }
-
-// let productC = {
-//     "id": "003",
-//     "name": "CCC",
-//     "slug": "CCC",
-//     "brand?": "CCC",
-//     "category": "CCC",
-//     "clothingCategories?": "CCC", // add in schema
-//     "price": 11111,
-//     "stock": 11111,
-//     "forWhom": "CCC",
-//     "height?": "CCC",
-//     "heightDescription?": "CCC",
-//     "age?": "CCC",
-//     "ageDescription": "CCC",
-//     "itemDescription": "CCC",
-//     "featured": false,
-//     "images": ["CCC", "CCC"],
-// }
-
-// let products = [ productA, productB, productC ];
-
 const productsReducer = (state: initialProductsStateType, action: any) => {
+    console.log("state:", state)
+    console.log("action", action)
     if (action.type === SIDEBAR_OPEN) {
         return { ...state, isSidebarOpen: true }
     }
@@ -79,56 +22,45 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
     }
 
     if (action.type === GET_PRODUCTS_BEGIN) {
+        console.log('product loading....')
         return { ...state, productsLoading: true}
     }
 
     if (action.type === GET_PRODUCTS_SUCCESS) {
         // fit data from API into productDataType shape
-        // const allProducts = products.map((product: productDataType) => {
         const allProducts = action.payload.map((product: any) => {
+        // const allProducts = action.payload.map((product: any) => {
             let {
-                id: id,
+                _id:  id,
                 name,
-                slug,
-                brand,
-                category,
-                clothingCategories, // might be null, need to flatten
-                price,
-                forWhom,
-                height, //need to flatten
-                heightDescription,
-                age, //need to flatten
-                ageDescription,
-                stock,
-                itemDescription,
-                featured,
-                images, //need to flatten
+                main_category,
+                sub_category,
+                actual_price,
+                discount_price,
+                image,
+                link,
+                ratings,
+                no_of_ratings,
             } = product
 
             return {
                 id,
                 name,
-                slug,
-                brand,
-                category,
-                clothingCategories,
-                price,
-                stock,
-                forWhom,
-                height,
-                heightDescription,
-                age,
-                ageDescription,
-                itemDescription,
-                featured,
-                images,
+                main_category,
+                sub_category,
+                actual_price,
+                discount_price,
+                image,
+                link,
+                ratings,
+                no_of_ratings,
             }
         })
-        const featuredProducts = allProducts.filter(
-            (product: productDataType) => product.featured
-        )
+        // const featuredProducts = allProducts.filter(
+        //     (product: productDataType) => product.featured
+        // )
 
-        return { ...state, productsLoading: false, allProducts, featuredProducts }
+        return { ...state, productsLoading: false, allProducts }
     }
 
     if (action.type === GET_PRODUCTS_ERROR) {

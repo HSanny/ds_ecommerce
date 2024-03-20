@@ -17,7 +17,7 @@ const Filter = () => {
     } = useFilterContext()
   
   // categories
-  const uniqueCategory = getUniqueValues(allProducts, "category")
+  const uniqueCategory = getUniqueValues(allProducts, "main_category")
 
 
     return (

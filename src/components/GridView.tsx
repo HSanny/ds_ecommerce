@@ -13,12 +13,12 @@ const GridView: React.FC<PropsWithChildren<{ filteredProducts: productDataType[]
             <div className="products-container">
                 {filteredProducts.map(product => (
                     // similar to grid view
-                    <Link to={`/products/${product.slug}`} key={product.id}>
+                    <Link to={`/products/${product.id}`} key={product.id}>
                         {/* Similar to above, display a preview or summary */}
                         <div>
-                            <img src={product.images[0]} alt={product.name} />
+                            <img src={product.image} alt={product.name} />
                             <h5>{product.name}</h5>
-                            <p>{product.price}</p>
+                            <p>{product.actual_price}</p>
                         </div>
                     </Link>
 

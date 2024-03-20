@@ -18,12 +18,12 @@ const FeaturedProduct = () => {
       <div>
         {featuredProducts &&
           featuredProducts.map(product => (
-            <Link to={`/products/${product.slug}`} key={product.id}>
+            <Link to={`/products/${product.id}`} key={product.id}>
               {/* Here you can display a preview or summary of the product */}
               <div>
-                <img src={product.images[0]} alt={product.name} />
+                <img src={product.image} alt={product.name} />
                 <h5>{product.name}</h5>
-                <p>{product.price}</p>
+                <p>{product.actual_price}</p>
               </div>
             </Link>
             // <SingleProduct key={product.id} product={product} />

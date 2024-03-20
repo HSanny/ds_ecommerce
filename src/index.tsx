@@ -9,13 +9,13 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  // <ProductsProvider>
+  <ProductsProvider>
     <FilterProvider>
       <CartProvider>
         <App />
       </CartProvider>
     </FilterProvider>
-  // </ProductsProvider>
+  </ProductsProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

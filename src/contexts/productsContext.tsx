@@ -11,7 +11,7 @@ import {
     GET_SINGLE_PRODUCT_ERROR,
 } from "../actions/productActions";
 import { initialProductsStateType, productDataType } from "../types/productType";
-import { API_ENDPOINT, QUERY } from "../utils/constants";
+import { API_ENDPOINT } from "../utils/constants";
 import axios from "axios"
 
 
@@ -44,43 +44,21 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const closeSidebar = () => {
         dispatch({ type: SIDEBAR_CLOSE })
     }
-
-    const fetchSingleProduct = (slug: string) => {
-        dispatch({
-            type: GET_SINGLE_PRODUCT_BEGIN
-        })
-        try {
-            const singleProduct: productDataType = state.allProducts.filter(
-                (product: productDataType) => product.slug === slug 
-            )[0]
-
-            if (singleProduct) {
-                dispatch({
-                    type: GET_SINGLE_PRODUCT_SUCCESS,
-                    payload: singleProduct,
-                })
-            }
-        } catch(error) {
-            console.log(error)
-            dispatch({
-                type: GET_SINGLE_PRODUCT_ERROR
-            })
-        }
-    }
-
+    
     // Fetch all products
     React.useEffect(() => {
         const fetchAllProducts = async () => {
+            console.log(111111)
             dispatch({ tpye: GET_PRODUCTS_BEGIN })
             try {
-                const queryResult = await axios.post(API_ENDPOINT, { query: QUERY })
-                const result = queryResult.data.data.allProduct
+                const response = await axios.get(API_ENDPOINT)
+                console.log(22222)
                 dispatch({ 
                     type: GET_PRODUCTS_SUCCESS,
-                    payload: result
+                    payload: response.data
                  }) 
             } catch(error) {
-                console.log(error)
+                console.log("fetch all products error:", error)
                 dispatch({
                     type: GET_PRODUCTS_ERROR
                 })
@@ -89,6 +67,28 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         fetchAllProducts()
     }, [])
 
+    const fetchSingleProduct = (name: string) => {
+        dispatch({
+            type: GET_SINGLE_PRODUCT_BEGIN
+        })
+        try {
+            const singleProduct: productDataType = state.allProducts.filter(
+                (product: productDataType) => product.name === name
+            )[0]
+
+            if (singleProduct) {
+                dispatch({
+                    type: GET_SINGLE_PRODUCT_SUCCESS,
+                    payload: singleProduct,
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            dispatch({
+                type: GET_SINGLE_PRODUCT_ERROR
+            })
+        }
+    }
 
 
     return (

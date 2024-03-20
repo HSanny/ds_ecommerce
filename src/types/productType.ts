@@ -4,20 +4,14 @@
 export type productDataType = {
     id: string
     name: string
-    slug: string
-    brand?: string
-    category: string
-    clothingCategories?: string // add in schema
-    price: number
-    stock: number
-    forWhom: string
-    height?: string[]
-    heightDescription?: string
-    age?: string[]
-    ageDescription: string
-    itemDescription: string
-    featured?: boolean
-    images: string[]
+    main_category: string
+    sub_category: string
+    actual_price: string
+    discount_price: string
+    image: string
+    link: string
+    ratings: number
+    no_of_ratings: string
 }
 
 export type productDataTypeKey = keyof productDataType;

@@ -31,10 +31,10 @@ const SingleProduct = () => {
   // console.log("error: ", error)
   // console.log("single product: ", singleProduct)
 
-  const { images, name, price } = singleProduct as productDataType
+  const { image, name, actual_price } = singleProduct as productDataType
 
   // Check if images array is available and has elements
-  const image = images && images.length > 0 ? images[0] : 'defaultImageURL';
+  // const image = image && image.length > 0 ? image[0] : 'defaultImageURL';
 
 
 
@@ -51,7 +51,7 @@ const SingleProduct = () => {
       </div>
       <footer>
         <h5>{name}</h5>
-        <p>{price}</p>
+        <p>{actual_price}</p>
       </footer>
     </ProductWrapper>
   )

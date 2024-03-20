@@ -47,7 +47,6 @@ const filterContext = React.createContext<initialStateType>(initialState);
 export const FilterProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const { allProducts } = useProductsContext()
-
     const [state, dispatch] = React.useReducer(filterReducer, initialState)
 
     React.useEffect(() => {
