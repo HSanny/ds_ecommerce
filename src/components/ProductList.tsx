@@ -7,13 +7,21 @@ import ListView from "./ListView";
 
 const ProductList = () => {
 
+    const [pageNumber, setPageNumber] = React.useState(1)
+
     const {
+        totalPage,
         filteredProducts,
-        gridView
+        gridView,
+        filters,
     } = useFilterContext()
-    const { productsLoading } = useProductsContext()
-    
-    console.log('filtered products: ', filteredProducts)
+    const { productsLoading, fetchAllProducts } = useProductsContext()
+
+    const handlePageNumberChange = (newPageNumber: number) => {
+        setPageNumber(newPageNumber)
+        fetchAllProducts(filters, pageNumber)
+    }
+
     if (productsLoading) {
         return <Loading />
     }
@@ -28,9 +36,19 @@ const ProductList = () => {
 
     return (
         <>
-            {gridView ? <GridView filteredProducts={filteredProducts}>
+            {gridView ? <GridView
+                filteredProducts={filteredProducts}
+                pageNumber={pageNumber}
+                onPageNumberChange={handlePageNumberChange}
+                totalPage={totalPage}
+            >
                 product list
-            </GridView> : <ListView filteredProducts={filteredProducts}/>}
+            </GridView> : <ListView
+                filteredProducts={filteredProducts}
+                pageNumber={pageNumber}
+                onPageNumberChange={handlePageNumberChange}
+                totalPage={totalPage}
+            />}
         </>
     )
 }

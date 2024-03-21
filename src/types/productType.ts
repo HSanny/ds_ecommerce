@@ -1,6 +1,8 @@
 // https://www.kaggle.com/datasets/aaditshukla/flipkart-fasion-products-dataset
 // https://www.kaggle.com/datasets/lokeshparab/amazon-products-dataset/data?select=All+Electronics.csv
 
+import { filterType } from "./filterTypes"
+
 export type productDataType = {
     id: string
     name: string
@@ -19,11 +21,13 @@ export type productDataTypeKey = keyof productDataType;
 export type initialProductsStateType = {
     isSidebarOpen: boolean
     allProducts: productDataType[] | []
+    totalPage: number
     featuredProducts: productDataType[] | []
     singleProduct: productDataType | {}
     openSidebar: () => void
     closeSidebar: () => void
     fetchSingleProduct: (id: string) => void
+    fetchAllProducts: (filters: filterType, pageNumber: number) => void
     productsLoading: boolean
     productsError: boolean
     singleProductLoading: boolean

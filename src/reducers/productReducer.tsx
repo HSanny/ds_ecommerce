@@ -27,8 +27,9 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
     }
 
     if (action.type === GET_PRODUCTS_SUCCESS) {
+        const totalPage = action.payload.total_page
         // fit data from API into productDataType shape
-        const allProducts = action.payload.map((product: any) => {
+        const allProducts = action.payload.products.map((product: any) => {
         // const allProducts = action.payload.map((product: any) => {
             let {
                 _id:  id,
@@ -60,7 +61,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
         //     (product: productDataType) => product.featured
         // )
 
-        return { ...state, productsLoading: false, allProducts }
+        return { ...state, productsLoading: false, allProducts, totalPage }
     }
 
     if (action.type === GET_PRODUCTS_ERROR) {

@@ -11,18 +11,23 @@ import {
     GET_SINGLE_PRODUCT_ERROR,
 } from "../actions/productActions";
 import { initialProductsStateType, productDataType } from "../types/productType";
-import { API_ENDPOINT } from "../utils/constants";
 import axios from "axios"
+import { filterType } from "../types/filterTypes";
+import { getCsrfToken } from "../utils/helpers";
+import { SummaryType } from "../types/summaryType";
+import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
 
 
 const initialProductsState: initialProductsStateType = {
     isSidebarOpen: false,
     allProducts: [],
+    totalPage: 0,
     featuredProducts: [],
     singleProduct: {},
     openSidebar: () => { },
     closeSidebar: () => { },
     fetchSingleProduct: (id: string) => { },
+    fetchAllProducts: () => { },
     productsLoading: false,
     productsError: false,
     singleProductLoading: false,
@@ -44,26 +49,59 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const closeSidebar = () => {
         dispatch({ type: SIDEBAR_CLOSE })
     }
-    
-    // Fetch all products
-    React.useEffect(() => {
-        const fetchAllProducts = async () => {
-            console.log(111111)
-            dispatch({ tpye: GET_PRODUCTS_BEGIN })
-            try {
-                const response = await axios.get(API_ENDPOINT)
-                console.log(22222)
-                dispatch({ 
-                    type: GET_PRODUCTS_SUCCESS,
-                    payload: response.data
-                 }) 
-            } catch(error) {
-                console.log("fetch all products error:", error)
-                dispatch({
-                    type: GET_PRODUCTS_ERROR
-                })
-            }
+
+    const fetchSummary = async (): Promise<SummaryType> => {
+        try {
+            const response = await axios.get<SummaryType>(SUMMARY_ENDPOINT, {
+                withCredentials: true, // include credentials for CORS and CSRF
+            });
+            return response.data
+        } catch (error) {
+            console.error('Failed to fetch summary data: ', error);
+            throw error
         }
+    };
+
+    // Fetch all products
+    const fetchAllProducts = async (filters: filterType = {}, pageNumber: number = 1) => {
+        dispatch({ type: GET_PRODUCTS_BEGIN })
+        try {
+            const data = {
+                filters,
+                page: pageNumber
+            }
+            // This is for get method
+            // const params = new URLSearchParams();
+            // // This will add each filter to the query parameters only if it has a value. 
+            // Object.keys(filters).forEach(key => {
+            //     // use type assertion
+            //     const value = filters[key as keyof filterType]
+            //     if (value != undefined) {
+            //         params.append(key, String(value));
+            //     }
+            // });
+
+            // params.append('page', String(pageNumber))
+            console.log('csrftoken:', getCsrfToken())
+            const response = await axios.post(DATA_ENDPOINT, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken(),
+                },
+                withCredentials: true,
+            })
+            dispatch({
+                type: GET_PRODUCTS_SUCCESS,
+                payload: response.data
+            })
+        } catch (error) {
+            dispatch({
+                type: GET_PRODUCTS_ERROR
+            })
+        }
+    }
+    React.useEffect(() => {
+        fetchSummary()
         fetchAllProducts()
     }, [])
 
@@ -92,7 +130,7 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 
     return (
-        <ProductsContext.Provider value={{ ...state, openSidebar, closeSidebar, fetchSingleProduct}}>
+        <ProductsContext.Provider value={{ ...state, fetchAllProducts, openSidebar, closeSidebar, fetchSingleProduct }}>
             {children}
         </ProductsContext.Provider>
     )

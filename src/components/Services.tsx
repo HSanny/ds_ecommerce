@@ -59,7 +59,7 @@ const Services = () => {
                                         onClick={e => {
                                             clearFilter()
                                             handleClickFromService()
-                                            updateFilter(e)
+                                            // updateFilter(e)
                                         }}
                                     >
                                         Click here for {service.title}

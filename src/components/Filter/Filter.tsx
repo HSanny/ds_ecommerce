@@ -3,29 +3,48 @@ import styled from "styled-components";
 import FilterButton from "./FilterButton";
 import { useFilterContext } from "../../contexts/filterContext";
 import { getUniqueValues } from "../../utils/helpers";
+import { filterType, initialFilterState } from "../../types/filterTypes";
 
 const Filter = () => {
-    const [filter, setFilter] = React.useState(false)
+    const [filter, setFilter] = React.useState<filterType>(initialFilterState)
 
     const {
-      clearFilter,
-      updateFilter,
-      allProducts,
-      filter: {
-        search,
-        category }
-    } = useFilterContext()
+        clearFilter,
+        updateFilter,
+        allProducts,
+        filters,
+      } = useFilterContext()
   
   // categories
-  const uniqueCategory = getUniqueValues(allProducts, "main_category")
+  // const uniqueCategory = getUniqueValues(allProducts, "main_category")
 
+  const handleChange = (e: any) => {
+    const { name, value, type, checked, textContent } = e.target;
+    let newValue: string | number | undefined = value;
+
+    if (name === 'search') {
+      newValue = textContent;
+    }
+    if (['actual_price_gte', 'actual_price_lte', 'discount_price_gte', 'discount_price_lte', 'rating'].includes(name)) {
+      newValue = Number(value);
+    }
+
+    setFilter(prevFilters => ({
+      ...prevFilters,
+      [name]: newValue,
+    }));
+  }
+
+  React.useEffect(() => {
+    updateFilter(filters)
+  }, [])
 
     return (
         <Wrapper>
-        <FilterButton
+        {/* <FilterButton
           filter={filter}
           setFilter={setFilter}
-        />
+        /> */}
 
         {/* Filterring Form */}
         <div className={filter ? 'show-filters content' : 'content'}>
@@ -37,11 +56,11 @@ const Filter = () => {
                 name="search"
                 placeholder="search"
                 className="search-input"
-                value={search}
+                value={filters.search? filters.search : ''}
                 onChange={
                   e => {
                     console.log(e)
-                    updateFilter(e)
+                    handleChange(e)
                   }
                 }
               />
@@ -51,7 +70,7 @@ const Filter = () => {
             <div className="form-control">
               <h5>Category</h5>
               <div>
-                {uniqueCategory.map((c) => {
+                {/* {uniqueCategory.map((c) => {
                   if (typeof c === "string") {
                     return (
                       <button
@@ -68,7 +87,7 @@ const Filter = () => {
                     )
                   }
                   // return null
-                })}
+                })} */}
               </div>
             </div>
             

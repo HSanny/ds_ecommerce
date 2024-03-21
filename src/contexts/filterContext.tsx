@@ -15,26 +15,16 @@ import {
     UPDATE_SORT
 } from "../actions/filterActions";
 
-const defaultFilter: filterType = {
-    search: '',
-    category: 'all',
-    minPrice: 0,
-    maxPrice: 0,
-    price: 0,
-    forWhom: 'all',
-    age: [],
-    height: [],
-}
-
 const initialState: initialStateType = {
     filteredProducts: [],
     allProducts: [],
+    totalPage: 0,
     gridView: true,
     setGridView: () => { },
     setListView: () => { },
     sort: 'price-lowest',
     updateSort: () => { },
-    filter: defaultFilter,
+    filters: {},
     updateFilter: () => { },
     clearFilter: () => { },
     isClickFromServices: false,
@@ -46,7 +36,8 @@ const filterContext = React.createContext<initialStateType>(initialState);
 
 export const FilterProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
-    const { allProducts } = useProductsContext()
+    const { allProducts, fetchAllProducts } = useProductsContext()
+    console.log("all products: ", allProducts)
     const [state, dispatch] = React.useReducer(filterReducer, initialState)
 
     React.useEffect(() => {
@@ -64,7 +55,7 @@ export const FilterProvider: React.FC<PropsWithChildren> = ({ children }) => {
         dispatch({
             type: SORT_PRODUCTS
         })
-    }, [allProducts, state.sort, state.filter])
+    }, [allProducts])
 
     const setGridView = () => {
         dispatch({ type: SET_GRID_VIEW })
@@ -75,25 +66,10 @@ export const FilterProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const updateSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
         dispatch({ type: UPDATE_SORT, payload: e.target.value })
     }
-    
-    const updateFilter = (e: any) => {
-        let name = e.target.name
-        let value = e.target.value
-        let checked 
 
-        if (name === 'category') {
-            value = e.target.textContent
-        }
-        if (name === 'home-page-category') {
-            name = 'category'
-        }
-        if (name === 'price') {
-            value = Number(value)
-        }
-        if (name === 'age' || name === 'height') {
-            checked = e.target.checked
-        }
-        dispatch({ type: UPDATE_FILTERS, payload: { name, value, checked } })
+    const updateFilter = (filters:filterType) => {
+        
+        fetchAllProducts(filters, 1)
     }
 
     const clearFilter = () => {

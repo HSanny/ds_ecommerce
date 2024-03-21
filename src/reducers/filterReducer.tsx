@@ -9,6 +9,7 @@ import {
     CLEAR_FILTERS,
     HANDLE_CLICK_FROM_SERVICES,
     RESET_IS_CLICK_FROM_SERVICES,
+    UPDATE_FILTERS_AND_FETCH,
 } from "../actions/filterActions";
 
 import { initialStateType } from "../types/filterTypes";
@@ -28,9 +29,9 @@ const filterReducer = (
 
         return {
             ...state,
-            allProducts: [...action.payload],
-            filteredProducts: [...action.payload],
-            filter: { ...state.filter, maxPrice, price: maxPrice }
+            totalPage: action.payload.total_page,
+            allProducts: [action.payload.products],
+            filter: { ...state.filters, maxPrice, price: maxPrice }
         }
     }
 
@@ -47,10 +48,10 @@ const filterReducer = (
     }
 
     if (action.type === SORT_PRODUCTS) {
-        let temp = [...state.filteredProducts]
+        let temp = [...state.allProducts]
 
         if (state.sort === "price-lowest") {
-            temp = temp.sort((a, b) => parseInt(a.actual_price) -parseInt(b.actual_price))
+            temp = temp.sort((a, b) => parseInt(a.actual_price) - parseInt(b.actual_price))
         }
 
         if (state.sort === "price-highest") {
@@ -69,76 +70,62 @@ const filterReducer = (
                 return b.name.localeCompare(a.name)
             })
         }
-        return { ...state, filteredProducts: temp }
+        return { ...state, allProducts: temp }
     }
     // update filters
     if (action.type === UPDATE_FILTERS) {
-        let { name, value, checked } = action.payload
-        let { age, height } = state.filter
 
-        if (name === 'age') {
-            if (checked) {
-                // console.log('a box is just checked')
-                age.push(value)
-                // console.log(age)
-                value = age
-                // console.log(value)
-            }
-            if (!checked) {
-                // console.log('a box is UNCHECKED')
-                age = age.filter(ageValue => ageValue !== value)
-                value = age
-                // console.log(value)
-            }
+        return {
+            ...state,
         }
-        if (name === 'height') {
-            if (checked) {
-                height.push(value)
-                value = height
-            }
-            if (!checked) {
-                height = height.filter(heightValue => heightValue !== value)
-                value = height
-            }
-        }
-        return { ...state, filter: { ...state.filter, [name]: value } }
 
     }
 
-    // filter products
+    if (action.type === UPDATE_FILTERS_AND_FETCH) {
+        
+    }
+
+    // // filter products
     if (action.type === FILTER_PRODUCTS) {
         const { allProducts } = state
+        console.log('ap', allProducts)
         const {
             search,
-            category,
-            forWhom,
-            price,
-            age: ageFilters,
-            height: heightFilters,
-        } = state.filter
-        console.log('search: ', search, 'filter: ', state.filter)
+            main_category,
+            sub_category,
+            // actual_price_gte,
+            // actual_price_lte,
+            // discount_price_gte,
+            // discount_price_lte,
+            // rating,
+        } = state.filters
+        console.log('search: ', search, 'filter: ', state.filters)
         let temp = [...allProducts]
         // filter by searchTerm
         if (search) {
             temp = temp.filter(product => {
-                // console.log(product)
                 return (
-                    product.name.toLowerCase().includes(search.toLowerCase()) ||
-                    product.sub_category.toLowerCase().includes(search.toLowerCase())
+                    product?.name.toLowerCase().includes(search.toLowerCase()) ||
+                    product?.sub_category.toLowerCase().includes(search.toLowerCase())
                 )
             })
-            console.log("temp: ", temp)
         }
         // main category
-        if (category !== 'all') {
+        if (main_category !== 'all') {
             temp = temp.filter(product => {
-                return product.main_category === category
+                return product?.main_category === main_category
+            })
+        }
+        // sub category
+        if (sub_category !== 'all') {
+            temp = temp.filter(product => {
+                return product?.sub_category === sub_category
             })
         }
         // price
-        temp = temp.filter(product => {
-            return parseInt(product.actual_price) <= price
-        })
+        // temp = temp.filter(product => {
+        //     return parseInt(product.actual_price) <= price
+        // })
 
         return { ...state, filteredProducts: temp }
 
@@ -147,15 +134,7 @@ const filterReducer = (
     if (action.type === CLEAR_FILTERS) {
         return {
             ...state,
-            filters: {
-                ...state.filter,
-                searchTerm: '',
-                category: 'all',
-                price: state.filter.maxPrice,
-                forWhom: 'all',
-                age: [],
-                height: [],
-            },
+            filters: {},
         }
     }
 
