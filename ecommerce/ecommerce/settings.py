@@ -38,11 +38,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+# place corsMiddlerware before django's commonMiddleware
+
+# The reason CorsMiddleware should come before CommonMiddleware is about the handling of HTTP responses:
+# Pre-Processing of Requests: CorsMiddleware needs to process the request first to add the necessary CORS headers. If a request from a non-allowed origin gets processed by other middlewares before it reaches CorsMiddleware, there might be cases where CORS headers won't be added correctly, leading to CORS errors on the client side.
+# Handling HTTP Redirects: If CommonMiddleware redirects a request (e.g., appending a slash to the URL) before CorsMiddleware gets to process it, the redirect response may not include the necessary CORS headers. As a result, browsers will block the response due to CORS policy violations.
+# Optimizing Response Time: Handling CORS before other potentially time-consuming middleware can optimize response times for blocked cross-origin requests, as it avoids unnecessary processing for requests that will ultimately be rejected due to CORS policies.
+    
+    'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -127,3 +136,38 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS setting
+
+CORS_ALLOW_ALL_ORIGINS = False  # Make sure this is False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Frontend application origin
+]
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+]
+
+# Ensure that Django will accept credentials (cookies, HTTP authentication) in the requests
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',  # CSRF Token header
+    'x-requested-with',  # Additional headers can be added here
+]
+# If your frontend and backend are served under different subdomains or domains, 
+# you might need to configure the domain for the CSRF cookie so it's accessible to your frontend. 
+CSRF_COOKIE_DOMAIN = ".example.com"  # Adjust the domain accordingly
+
+# settings.py
+SESSION_COOKIE_DOMAIN = None  # Default: Use the domain of the request
+CSRF_COOKIE_DOMAIN = None     # Default: Use the domain of the request
+CSRF_COOKIE_PATH = '/'        # Default: Set at the root path
+CSRF_USE_SESSIONS = False     # Default: CSRF token stored in a cookie
