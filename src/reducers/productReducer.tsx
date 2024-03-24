@@ -7,8 +7,11 @@ import {
     GET_SINGLE_PRODUCT_BEGIN,
     GET_SINGLE_PRODUCT_SUCCESS,
     GET_SINGLE_PRODUCT_ERROR,
+    GET_PRODUCT_SUMMARY_BEGIN,
+    GET_PRODUCT_SUMMARY_ERROR,
+    GET_PRODUCT_SUMMARY_SUCCESS,
 } from "../actions/productActions";
-import { productDataType, initialProductsStateType } from "../types/productType";
+import { initialProductsStateType } from "../types/productType";
 
 const productsReducer = (state: initialProductsStateType, action: any) => {
     console.log("state:", state)
@@ -23,16 +26,16 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
 
     if (action.type === GET_PRODUCTS_BEGIN) {
         console.log('product loading....')
-        return { ...state, productsLoading: true}
+        return { ...state, productsLoading: true }
     }
 
     if (action.type === GET_PRODUCTS_SUCCESS) {
-        const totalPage = action.payload.total_page
+        const totalPage = action.payload.total_pages
         // fit data from API into productDataType shape
-        const allProducts = action.payload.products.map((product: any) => {
-        // const allProducts = action.payload.map((product: any) => {
+        const products = action.payload.products.map((product: any) => {
+            // const allProducts = action.payload.map((product: any) => {
             let {
-                _id:  id,
+                _id,
                 name,
                 main_category,
                 sub_category,
@@ -45,7 +48,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
             } = product
 
             return {
-                id,
+                id: _id,
                 name,
                 main_category,
                 sub_category,
@@ -57,15 +60,13 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
                 no_of_ratings,
             }
         })
-        // const featuredProducts = allProducts.filter(
-        //     (product: productDataType) => product.featured
-        // )
 
-        return { ...state, productsLoading: false, allProducts, totalPage }
+
+        return { ...state, productsLoading: false, products, totalPage }
     }
 
     if (action.type === GET_PRODUCTS_ERROR) {
-        return { ...state, productsError: true, productsLoading: false}
+        return { ...state, productsError: true, productsLoading: false }
     }
 
     if (action.type === GET_SINGLE_PRODUCT_BEGIN) {
@@ -77,6 +78,17 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
     }
     if (action.type === GET_SINGLE_PRODUCT_ERROR) {
         return { ...state, singleProductError: true, singleProductLoading: false }
+    }
+
+    if (action.type === GET_PRODUCT_SUMMARY_BEGIN) {
+        return { ...state, summaryLoading: true }
+    }
+    if (action.type === GET_PRODUCT_SUMMARY_SUCCESS) {
+        // check if it returns the correct productDataType object instead of an array
+        return { ...state, summaryLoading: false }
+    }
+    if (action.type === GET_PRODUCT_SUMMARY_ERROR) {
+        return { ...state, summaryError: true, summaryLoading: false }
     }
     // return state
     throw new Error(`No Matching "${action.type}" - action type`)

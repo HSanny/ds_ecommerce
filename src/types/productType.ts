@@ -2,6 +2,7 @@
 // https://www.kaggle.com/datasets/lokeshparab/amazon-products-dataset/data?select=All+Electronics.csv
 
 import { filterType } from "./filterTypes"
+import { SummaryType } from "./summaryType"
 
 export type productDataType = {
     id: string
@@ -20,16 +21,25 @@ export type productDataTypeKey = keyof productDataType;
 
 export type initialProductsStateType = {
     isSidebarOpen: boolean
-    allProducts: productDataType[] | []
+    products: productDataType[] | []
     totalPage: number
+    currPage: number
+    filters: filterType
+    summary: SummaryType | {}
     featuredProducts: productDataType[] | []
     singleProduct: productDataType | {}
     openSidebar: () => void
     closeSidebar: () => void
     fetchSingleProduct: (id: string) => void
     fetchAllProducts: (filters: filterType, pageNumber: number) => void
+    updateFilter: (filters: filterType) => void
+    setFilters: (filters: filterType) => void
+    clearFilter: () => void
+    setCurrPage: (currPage: number) => void
     productsLoading: boolean
     productsError: boolean
     singleProductLoading: boolean
     singleProductError: boolean
+    summaryLoading: boolean
+    summaryError: boolean
 }

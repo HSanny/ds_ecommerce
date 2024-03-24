@@ -5,10 +5,11 @@ import { useFilterContext } from "../contexts/filterContext";
 import Sorting from "../components/Sorting";
 import ProductList from "../components/ProductList";
 import { Outlet } from "react-router-dom";
+import { useProductsContext } from "../contexts/productsContext";
 
 const ProductsPage = () => {
-  const { clearFilter, isClickFromServices, resetIsClickFromService } = useFilterContext();
-
+  const { isClickFromServices, resetIsClickFromService } = useFilterContext();
+  const { clearFilter } = useProductsContext();
   React.useEffect(() => {
     if (isClickFromServices) {
       resetIsClickFromService()

@@ -36,26 +36,22 @@ const filterContext = React.createContext<initialStateType>(initialState);
 
 export const FilterProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
-    const { allProducts, fetchAllProducts } = useProductsContext()
-    console.log("all products: ", allProducts)
+    const { products, fetchAllProducts } = useProductsContext()
+    
     const [state, dispatch] = React.useReducer(filterReducer, initialState)
 
     React.useEffect(() => {
         dispatch({
             type: LOAD_PRODUCTS,
-            payload: allProducts
+            payload: products
         })
-    }, [allProducts])
+    }, [products])
 
     React.useEffect(() => {
         dispatch({
-            type: FILTER_PRODUCTS
-        })
-
-        dispatch({
             type: SORT_PRODUCTS
         })
-    }, [allProducts])
+    }, [products])
 
     const setGridView = () => {
         dispatch({ type: SET_GRID_VIEW })

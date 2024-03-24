@@ -9,29 +9,41 @@ import {
     GET_SINGLE_PRODUCT_BEGIN,
     GET_SINGLE_PRODUCT_SUCCESS,
     GET_SINGLE_PRODUCT_ERROR,
+    GET_PRODUCT_SUMMARY_BEGIN,
+    GET_PRODUCT_SUMMARY_SUCCESS,
+    GET_PRODUCT_SUMMARY_ERROR,
 } from "../actions/productActions";
 import { initialProductsStateType, productDataType } from "../types/productType";
 import axios from "axios"
 import { filterType } from "../types/filterTypes";
-import { getCsrfToken } from "../utils/helpers";
-import { SummaryType } from "../types/summaryType";
+import { SummaryType, initialSummary } from "../types/summaryType";
 import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
+import getCsrfToken, { isValidSummary } from "../utils/helpers";
 
 
 const initialProductsState: initialProductsStateType = {
     isSidebarOpen: false,
-    allProducts: [],
+    products: [],
     totalPage: 0,
     featuredProducts: [],
     singleProduct: {},
     openSidebar: () => { },
     closeSidebar: () => { },
-    fetchSingleProduct: (id: string) => { },
+    fetchSingleProduct: () => { },
     fetchAllProducts: () => { },
+    updateFilter: () => { },
+    setFilters: () => { },
+    clearFilter: () => { },
+    setCurrPage: () => { },
     productsLoading: false,
     productsError: false,
     singleProductLoading: false,
     singleProductError: false,
+    currPage: 0,
+    filters: {},
+    summary: {},
+    summaryLoading: false,
+    summaryError: false,
 }
 
 const ProductsContext = React.createContext<initialProductsStateType>(initialProductsState)
@@ -42,7 +54,10 @@ export const useProductsContext = () => {
 
 export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = React.useReducer(productsReducer, initialProductsState);
-
+    const [summary, setSummary] = React.useState<SummaryType>(initialSummary)
+    const [filters, setFilters] = React.useState<filterType>({})
+    const [currPage, setCurrPage] = React.useState(1)
+    console.log('currPage:', currPage)
     const openSidebar = () => {
         dispatch({ type: SIDEBAR_OPEN })
     }
@@ -50,25 +65,49 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: SIDEBAR_CLOSE })
     }
 
-    const fetchSummary = async (): Promise<SummaryType> => {
+    const fetchSummary = async () => {
+        dispatch({
+            type: GET_PRODUCT_SUMMARY_BEGIN
+        })
         try {
             const response = await axios.get<SummaryType>(SUMMARY_ENDPOINT, {
                 withCredentials: true, // include credentials for CORS and CSRF
             });
+
+            if (response) {
+                setSummary(response.data)
+                dispatch({
+                    type: GET_PRODUCT_SUMMARY_SUCCESS,
+                    payload: response.data
+                })
+            } else {
+                setSummary(initialSummary)
+            }
             return response.data
         } catch (error) {
-            console.error('Failed to fetch summary data: ', error);
-            throw error
+            dispatch({
+                type: GET_PRODUCT_SUMMARY_ERROR
+            })
         }
     };
 
+    const updateFilter = () => {
+        setFilters(filters);
+        fetchAllProducts(filters, currPage);
+    }
+
+    const clearFilter = () => {
+        setFilters({});
+        fetchAllProducts(filters, currPage)
+    }
+
     // Fetch all products
-    const fetchAllProducts = async (filters: filterType = {}, pageNumber: number = 1) => {
+    const fetchAllProducts = async (filter: filterType = {}, page: number = 1) => {
         dispatch({ type: GET_PRODUCTS_BEGIN })
         try {
-            const data = {
-                filters,
-                page: pageNumber
+            const payload = {
+                filters: filter,
+                page: page,
             }
             // This is for get method
             // const params = new URLSearchParams();
@@ -81,14 +120,15 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             //     }
             // });
 
-            // params.append('page', String(pageNumber))
-            console.log('csrftoken:', getCsrfToken())
-            const response = await axios.post(DATA_ENDPOINT, data, {
+            const csrfToken = getCsrfToken();
+            if (csrfToken) {
+                axios.defaults.headers.post['X-CSRFToken'] = csrfToken;
+            }
+            axios.defaults.withCredentials = true;
+            const response = await axios.post(DATA_ENDPOINT, JSON.stringify(payload), {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCsrfToken(),
-                },
-                withCredentials: true,
+                    'Content-Type': 'application/json'
+                }
             })
             dispatch({
                 type: GET_PRODUCTS_SUCCESS,
@@ -102,15 +142,15 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
     React.useEffect(() => {
         fetchSummary()
-        fetchAllProducts()
-    }, [])
+        fetchAllProducts(filters, currPage)
+    }, [currPage, filters])
 
     const fetchSingleProduct = (name: string) => {
         dispatch({
             type: GET_SINGLE_PRODUCT_BEGIN
         })
         try {
-            const singleProduct: productDataType = state.allProducts.filter(
+            const singleProduct: productDataType = state.products.filter(
                 (product: productDataType) => product.name === name
             )[0]
 
@@ -130,7 +170,17 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 
     return (
-        <ProductsContext.Provider value={{ ...state, fetchAllProducts, openSidebar, closeSidebar, fetchSingleProduct }}>
+        <ProductsContext.Provider value={{
+            ...state,
+            fetchAllProducts,
+            openSidebar,
+            closeSidebar,
+            fetchSingleProduct,
+            setFilters,
+            clearFilter,
+            setCurrPage,
+            updateFilter
+        }}>
             {children}
         </ProductsContext.Provider>
     )

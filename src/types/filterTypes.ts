@@ -1,18 +1,18 @@
 import { productDataType } from "./productType"
 
 export type filterType = {
-    [key: string]: string | number | undefined;
+    [key: string]: string | number | undefined,
     // is an index signature. It tells TypeScript that filterType
     // can be indexed with a string,
     // and the value of that index can be a string, number, or undefined.
-    search?: string;
-    main_category?: string;
-    sub_category?: string;
-    actual_price_gte?: number;
-    actual_price_lte?: number;
-    discount_price_gte?: number;
-    discount_price_lte?: number;
-    rating?: number;
+    search?: string,
+    main_category?: string,
+    sub_category?: string,
+    actual_price_gte?: number,
+    actual_price_lte?: number,
+    discount_price_gte?: number,
+    discount_price_lte?: number,
+    rating?: number,
 }
 
 export type initialStateType = {

@@ -1,43 +1,35 @@
 import React from "react";
 import styled from "styled-components";
-import FilterButton from "./FilterButton";
-import { useFilterContext } from "../../contexts/filterContext";
-import { getUniqueValues } from "../../utils/helpers";
-import { filterType, initialFilterState } from "../../types/filterTypes";
+import { useProductsContext } from "../../contexts/productsContext";
+import SearchFilter from "./SearchFilter";
+import CategoryFilter from "./CategoryFilters";
+import PriceRangeFilter from "./PriceRangeFilter";
 
 const Filter = () => {
-    const [filter, setFilter] = React.useState<filterType>(initialFilterState)
+    const { filters, updateFilter, clearFilter } = useProductsContext();
 
-    const {
-        clearFilter,
-        updateFilter,
-        allProducts,
-        filters,
-      } = useFilterContext()
-  
-  // categories
-  // const uniqueCategory = getUniqueValues(allProducts, "main_category")
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [selectedCategory, setSelectedCategory] = React.useState({ main: '', sub: '' });
+    const [priceRange, setPriceRange] = React.useState([0, 100]); // example range
+    // ... other filter states
 
-  const handleChange = (e: any) => {
-    const { name, value, type, checked, textContent } = e.target;
-    let newValue: string | number | undefined = value;
+    const handleSearchChange = (term: any) => {
+      setSearchTerm(term);
+      updateFilter({ ...filters, search: term });
+    };
 
-    if (name === 'search') {
-      newValue = textContent;
-    }
-    if (['actual_price_gte', 'actual_price_lte', 'discount_price_gte', 'discount_price_lte', 'rating'].includes(name)) {
-      newValue = Number(value);
-    }
+    const handleCategoryChange = (mainCategory: string, subCategory: string) => {
+      setSelectedCategory({ main: mainCategory, sub: subCategory });
+      updateFilter({ ...filters, main_category: mainCategory, sub_category: subCategory });
+    };
 
-    setFilter(prevFilters => ({
-      ...prevFilters,
-      [name]: newValue,
-    }));
-  }
+    const handlePriceChange = (range:any) => {
+      setPriceRange(range);
+      updateFilter({ ...filters, price_gte: range[0], price_lte: range[1] });
+    };
 
-  React.useEffect(() => {
-    updateFilter(filters)
-  }, [])
+    // ... similar handlers for other filters
+
 
     return (
         <Wrapper>
@@ -46,60 +38,14 @@ const Filter = () => {
           setFilter={setFilter}
         /> */}
 
-        {/* Filterring Form */}
-        <div className={filter ? 'show-filters content' : 'content'}>
-          <form onSubmit={e => e.preventDefault()}>
-            {/* Search */}
-            <div className="form-control">
-              <input
-                type="text"
-                name="search"
-                placeholder="search"
-                className="search-input"
-                value={filters.search? filters.search : ''}
-                onChange={
-                  e => {
-                    console.log(e)
-                    handleChange(e)
-                  }
-                }
-              />
-            </div>
+        
+        <div className={filters ? 'show-filters content' : 'content'}>
 
-            {/* Category */}
-            <div className="form-control">
-              <h5>Category</h5>
-              <div>
-                {/* {uniqueCategory.map((c) => {
-                  if (typeof c === "string") {
-                    return (
-                      <button
-                        key={`${c}`}
-                        type="button"
-                        name="category"
-                        className={
-                          c.toLowerCase() === category ? "active" : undefined
-                        }
-                        onClick={e => updateFilter(e)}
-                      >
-                        {c}
-                      </button>
-                    )
-                  }
-                  // return null
-                })} */}
-              </div>
-            </div>
-            
-            {/* <SearchFilters />
-            <CategoryFilters />
-            <ForWhomFilters />
-            <PriceFilters />
-            <AgeFilters />
-            <HeightFilters /> */}
-          </form>
+          <SearchFilter value={searchTerm} onChange={handleSearchChange} />
+          <CategoryFilter value={selectedCategory} onChange={handleCategoryChange} />
+          <PriceRangeFilter value={priceRange} onChange={handlePriceChange} />
           {/* Clear Filters */}
-          <button type="button" className="clear-btn" onClick={clearFilter}>
+          <button type="button" className="clear-btn" onClick={() => clearFilter()}>
             Clear Filter
           </button>
         </div>

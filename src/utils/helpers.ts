@@ -1,6 +1,23 @@
 import axios from "axios";
 import { productDataType, productDataTypeKey } from "../types/productType";
 import { error } from "console";
+import { SummaryType } from "../types/summaryType";
+
+export const isValidSummary = (summary: any): summary is SummaryType => {
+    // Check if summary is an object
+    if (typeof summary !== 'object' || summary === null) {
+        return false;
+    }
+
+    // Check if all required properties exist and are of correct types
+    return Array.isArray(summary.main_categories) &&
+        Array.isArray(summary.sub_categories) &&
+        Array.isArray(summary.all_ratings) &&
+        typeof summary.max_actual_price === 'number' &&
+        typeof summary.max_discount_price === 'number' &&
+        typeof summary.min_actual_price === 'number' &&
+        typeof summary.min_discount_price === 'number';
+}
 
 export const formatPrice = (price: number) => {
     return Intl.NumberFormat('th-TH', {
@@ -38,22 +55,22 @@ export const sortUniqueCategoryByFirstNumber: (
 
 // Utility function to get the CSRF token from cookies
 
-export const getCsrfToken = (): string | null => {
-    // Log all cookies for debugging purposes (can be removed once confirmed working)
-    console.log('Document cookies:', document.cookie);
-
-    // Attempt to find the CSRF token within the cookies
-    const csrfToken = document.cookie.split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        ?.split('=')[1] || null;
-
-    // If the CSRF token is not found, log a warning
-    if (!csrfToken) {
-        console.warn('CSRF token not found in cookies.');
+function getCsrfToken() {
+    const name = 'csrftoken='; // Adjust the cookie name if your CSRF cookie has a different name
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
     }
-
-    return csrfToken;
-};
+    return "";
+}
+export default getCsrfToken
 
 // export const getCsrfToken = (): string | undefined => {
 //     const name = 'csrftoken'; // The default Django CSRF cookie name
