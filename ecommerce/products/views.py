@@ -13,28 +13,25 @@ from django.core.paginator import Paginator
 from utils.mongo import get_db_handle
 
 from collections import defaultdict
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
 
-@ensure_csrf_cookie
+import logging
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
 def amazon_products_list(request):
     db_handle, _ = get_db_handle()
     # use the collection name as per your MongoDB setup
     collection = db_handle.amazon_products 
+    print("entered amazon_product_list view")
+    logger.info("Entered amazon_products_list v")
     # documents = collection.find({})
-
-    # build query based on filter parameters
-#         example query for reference
-#         {
-#           "main_category": "Electronics",
-#           "actual_price": {
-#           "$gte": 100,
-#           "$lte": 500
-#         },
-#         "rating": "4"
-# }
     if request.method == 'POST':
         data = json.loads(request.body)
+        print("data:", data)
         filters = data.get('filters', {})
+        print("filters", filters)
         query = defaultdict(lambda:None)
 
         filter_params = [
@@ -69,19 +66,18 @@ def amazon_products_list(request):
 
         # Convert defaultdict back to a regular dict for MongoDB query
         query = dict(query)
-        # apply query
-        documents = collection.find(query)
-        # since the data set is very large, use pagination to return fixed amount of data per request
-        page_number = data.get('page', 1)
-
-        try:
-            page_number = int(page_number)
-        except:
-            page_number = 1
         
-        paginator = Paginator(list(documents), 10)
-        total_pages = paginator.num_pages
-        page_obj = paginator.get_page(page_number)
+        # Pagination
+        page_number = int(data.get('page', 1))
+        print("received page number", page_number)
+        logger.info(f"received page number: {page_number}")
+        items_per_page = 10 # limit
+        skip_items = (page_number - 1) * items_per_page
+
+        # apply query with pagination
+        total_documents = collection.count_documents(query)
+        documents = collection.find(query).skip(skip_items).limit(items_per_page)
+        total_pages = (total_documents + items_per_page - 1) // items_per_page
 
         # convert MongoDB documents to a list of dictionaries
         # using a list comprehension to create a list of products 
@@ -90,8 +86,11 @@ def amazon_products_list(request):
         #     {item: data[item] for item in data if item != '_id'} for data in documents
         # ]
 
+        logger.info(f"MongoDB Query: {query}")
+        print("MongoDB Query", query)
+        
         product_list = [
-            {key: value for key, value in doc.items() if key != "_id"} for doc in page_obj
+            {key: value for key, value in doc.items() if key != "_id"} for doc in documents
         ]
 
         response_data = {
