@@ -1,33 +1,41 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useProductsContext } from "../utils/productsContext";
+import { useProductsContext } from "../contexts/productsContext";
 import SingleProduct from "./SingleProduct";
 
 const FeaturedProduct = () => {
-    const { featuredProducts } = useProductsContext();
+  const { featuredProducts } = useProductsContext();
 
-    return (
-        <Wrapper className="section">
-            {/* Header */}
-            <div className="title">
-                <h2>Featured Product</h2>
-                <div className="underline"/>
-            </div>
-            {/* Featured Product */}
-            <div>
-                {featuredProducts && 
-                    featuredProducts.map(product => (
-                        <SingleProduct key={ product.id}  product={ product } />
-                    ))
-                }
-            </div>
-
-            <Link to="" className="btn">
-                All Product
+  return (
+    <Wrapper className="section">
+      {/* Header */}
+      <div className="title">
+        <h2>Featured Product</h2>
+        <div className="underline" />
+      </div>
+      {/* Featured Product */}
+      <div>
+        {featuredProducts &&
+          featuredProducts.map(product => (
+            <Link to={`/products/${product.id}`} key={product.id}>
+              {/* Here you can display a preview or summary of the product */}
+              <div>
+                <img src={product.image} alt={product.name} />
+                <h5>{product.name}</h5>
+                <p>{product.actual_price}</p>
+              </div>
             </Link>
-        </Wrapper>
-    )
+            // <SingleProduct key={product.id} product={product} />
+          ))
+        }
+      </div>
+
+      <Link to="" className="btn">
+        All Product
+      </Link>
+    </Wrapper>
+  )
 }
 
 export default FeaturedProduct;

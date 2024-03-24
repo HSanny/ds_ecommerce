@@ -7,6 +7,8 @@ const FilterButton: React.FC<{
     setFilter: React.Dispatch<React.SetStateAction<boolean>>
 }> = ({ filter, setFilter }) => {
 
+  
+
     return (
         <Wrapper>
             <h3> Filter </h3>

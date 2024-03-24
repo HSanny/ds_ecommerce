@@ -1,19 +1,34 @@
 import React from "react";
 import styled from "styled-components";
 import Filter from "../components/Filter/Filter";
+import { useFilterContext } from "../contexts/filterContext";
+import Sorting from "../components/Sorting";
+import ProductList from "../components/ProductList";
+import { Outlet } from "react-router-dom";
+import { useProductsContext } from "../contexts/productsContext";
 
 const ProductsPage = () => {
-    
-    return (
+  const { isClickFromServices, resetIsClickFromService } = useFilterContext();
+  const { clearFilter } = useProductsContext();
+  React.useEffect(() => {
+    if (isClickFromServices) {
+      resetIsClickFromService()
+    } else {
+      clearFilter()
+    }
+  },[])
+  
+  return (
         <main>
             <Wrapper className="page">
                 <div className="section-center products">
                     <Filter />
                     <div>
-                        {/* <Sort />
-                        <ProductList /> */}
+                        <Sorting />
+                        <ProductList />
                     </div>
-                </div>
+        </div>
+        <Outlet /> {/* this is where child routes will be rendered */}
             </Wrapper>
         </main>
     )

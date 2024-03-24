@@ -1,11 +1,54 @@
 import React from "react";
 import styled from "styled-components";
+import { useProductsContext } from "../../contexts/productsContext";
+import SearchFilter from "./SearchFilter";
+import CategoryFilter from "./CategoryFilters";
+import PriceRangeFilter from "./PriceRangeFilter";
 
 const Filter = () => {
-    const [filter, setFilter] = React.useState(false)
+    const { filters, updateFilter, clearFilter } = useProductsContext();
+
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [selectedCategory, setSelectedCategory] = React.useState({ main: '', sub: '' });
+    const [priceRange, setPriceRange] = React.useState([0, 100]); // example range
+    // ... other filter states
+
+    const handleSearchChange = (term: any) => {
+      setSearchTerm(term);
+      updateFilter({ ...filters, search: term });
+    };
+
+    const handleCategoryChange = (mainCategory: string, subCategory: string) => {
+      setSelectedCategory({ main: mainCategory, sub: subCategory });
+      updateFilter({ ...filters, main_category: mainCategory, sub_category: subCategory });
+    };
+
+    const handlePriceChange = (range:any) => {
+      setPriceRange(range);
+      updateFilter({ ...filters, price_gte: range[0], price_lte: range[1] });
+    };
+
+    // ... similar handlers for other filters
+
 
     return (
         <Wrapper>
+        {/* <FilterButton
+          filter={filter}
+          setFilter={setFilter}
+        /> */}
+
+        
+        <div className={filters ? 'show-filters content' : 'content'}>
+
+          <SearchFilter value={searchTerm} onChange={handleSearchChange} />
+          <CategoryFilter value={selectedCategory} onChange={handleCategoryChange} />
+          <PriceRangeFilter value={priceRange} onChange={handlePriceChange} />
+          {/* Clear Filters */}
+          <button type="button" className="clear-btn" onClick={() => clearFilter()}>
+            Clear Filter
+          </button>
+        </div>
 
         </Wrapper>
     )

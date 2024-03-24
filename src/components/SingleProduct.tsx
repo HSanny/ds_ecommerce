@@ -1,30 +1,60 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { productDataType } from "../types/productType";
 import { FaSearch } from "react-icons/fa";
+import { formatPrice } from "../utils/helpers";
+import { useProductsContext } from "../contexts/productsContext";
+import Loading from "./common/Loading";
+import Error from "./common/Error";
+import NotFound from "./common/NotFound";
 
-const SingleProduct: React.FC<{ product: productDataType }> = ({ product }) => {
+// const SingleProduct: React.FC<{ product: productDataType }> = ({ product }) => {
+const SingleProduct = () => {
+  
+  const { slug } = useParams()
+  const { fetchSingleProduct,singleProduct,singleProductLoading: loading,singleProductError: error } = useProductsContext()
 
-    const { images, name, price, slug } = product
-    const image = images[0]
+  // fetch product when component mounts or slug changes
+  React.useEffect(() => {
+    // ensure slug is defined before calling fecthSingleProduct
+    if (typeof slug === "string") {
+      fetchSingleProduct(slug)
+    }
+  }, [slug, fetchSingleProduct])
 
-    return (
-        <ProductWrapper>
-            <div className="container">
-                <Link to={`/products/${slug}`}>
-                    <img src={image} alt={name} />
-                    <div className="link">
-                        <FaSearch />
-                    </div>
-                </Link>
-            </div>
-            <footer>
-                <h5>{name}</h5>
-                <p></p>
-            </footer>
-        </ProductWrapper>
-    )
+  if (loading) return <Loading />
+  if (error) return <Error />
+  if (!singleProduct) return <NotFound />
+
+  // console.log("loading: ", loading)
+  // console.log("error: ", error)
+  // console.log("single product: ", singleProduct)
+
+  const { image, name, actual_price } = singleProduct as productDataType
+
+  // Check if images array is available and has elements
+  // const image = image && image.length > 0 ? image[0] : 'defaultImageURL';
+
+
+
+
+  return (
+    <ProductWrapper>
+      <div className="container">
+        <Link to={`/products/${slug}`}>
+          <img src={image} alt={name} />
+          <div className="link">
+            <FaSearch />
+          </div>
+        </Link>
+      </div>
+      <footer>
+        <h5>{name}</h5>
+        <p>{actual_price}</p>
+      </footer>
+    </ProductWrapper>
+  )
 }
 
 const ProductWrapper = styled.article`

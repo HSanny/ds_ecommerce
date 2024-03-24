@@ -5,14 +5,7 @@ import ScrollPage from './components/common/ScrollPage';
 import NaviBar from './components/NaviBar';
 import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
-
-const routes = [
-  {
-    path: "/",
-    component: <HomePage />,
-    name: "HomePage"
-  }
-]
+import SingleProduct from './components/SingleProduct';
 
 function App() {
   const AppRoutes = createBrowserRouter([
@@ -26,36 +19,50 @@ function App() {
           element: <HomePage />
         },
         {
-          index: true,
           path: '/products',
-          element: <ProductsPage />
+          element: <ProductsPage />,
+      //     children: [
+      //       {
+      //         path: ':slug',
+      //         element: <SingleProduct />,
+      //       }
+      // ]
         },
-        // {
-        //   index: true,
-        //   path: '/shipment',
-        //   element: <ShipmentPage />
-        // },
-        // {
-        //   index: true,
-        //   path: '/cart',
-        //   element: <CartPage />
-        // }
-      ]
+        {
+          path: `/products/:slug`,
+          element: <SingleProduct />
+        }
+    // {
+    //   index: true,
+    //   path: '/products/',
+    //   element: <SingleProduct />
+    // }
+    // {
+    //   index: true,
+    //   path: '/shipment',
+    //   element: <ShipmentPage />
+    // },
+    // {
+    //   index: true,
+    //   path: '/cart',
+    //   element: <CartPage />
+    // }
+  ]
     },
   ])
-  return (
-    <RouterProvider router={AppRoutes} />
-    // <BrowserRouter>
-    //   <Routes>
-    //     {routes.map((route) => (
-    //       <Route
-    //         path={route.path}
-    //         element={route.component}
-    //       />
-    //     ))}
-    //   </Routes>
-    // </BrowserRouter>
-  );
+return (
+  <RouterProvider router={AppRoutes} />
+  // <BrowserRouter>
+  //   <Routes>
+  //     {routes.map((route) => (
+  //       <Route
+  //         path={route.path}
+  //         element={route.component}
+  //       />
+  //     ))}
+  //   </Routes>
+  // </BrowserRouter>
+);
 }
 
 export default App;

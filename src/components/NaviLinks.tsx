@@ -1,5 +1,5 @@
 import React from "react"
-import { useProductsContext } from "../utils/productsContext";
+import { useProductsContext } from "../contexts/productsContext";
 import { links } from "../utils/constants";
 import { Link } from "react-router-dom";
 

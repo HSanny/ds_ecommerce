@@ -6,17 +6,15 @@ export const links = [
     },
     {
         id: 2,
-        text: 'shipping',
-        url: '/shipping',
-    },
-    {
-        id: 3,
         text: 'products',
         url: '/products',
     },
+    {
+      id: 3,
+      text: 'shipment',
+      url: '/shipment',
+    },
 ]
-
-export const API_ENDPOINT = "https://bqk6gkzk.api.sanity.io/v1/graphql/production/default"
 
 export const QUERY = `
 {
