@@ -10,7 +10,6 @@ const Sorting = () => {
       gridView, setGridView, setListView,
       sort, updateSort,
     } = useFilterContext();
-    // console.log(gridView)
     return (
         <Wrapper>
             {/* sort button */}

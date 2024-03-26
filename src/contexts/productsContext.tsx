@@ -12,6 +12,8 @@ import {
     GET_PRODUCT_SUMMARY_BEGIN,
     GET_PRODUCT_SUMMARY_SUCCESS,
     GET_PRODUCT_SUMMARY_ERROR,
+    UPDATE_FILTER,
+    CLEAR_FILTER,
 } from "../actions/productActions";
 import { initialProductsStateType, productDataType } from "../types/productType";
 import axios from "axios"
@@ -19,6 +21,7 @@ import { filterType } from "../types/filterTypes";
 import { SummaryType, initialSummary } from "../types/summaryType";
 import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
 import getCsrfToken, { isValidSummary } from "../utils/helpers";
+import AlertNotification from "../components/common/AlertNotification";
 
 
 const initialProductsState: initialProductsStateType = {
@@ -32,7 +35,7 @@ const initialProductsState: initialProductsStateType = {
     fetchSingleProduct: () => { },
     fetchAllProducts: () => { },
     updateFilter: () => { },
-    setFilters: () => { },
+    setFilter: () => { },
     clearFilter: () => { },
     setCurrPage: () => { },
     productsLoading: false,
@@ -55,9 +58,19 @@ export const useProductsContext = () => {
 export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = React.useReducer(productsReducer, initialProductsState);
     const [summary, setSummary] = React.useState<SummaryType>(initialSummary)
-    const [filters, setFilters] = React.useState<filterType>({})
+    const [filter, setFilter] = React.useState<filterType>({})
     const [currPage, setCurrPage] = React.useState(1)
-    console.log('currPage:', currPage)
+    console.log('state:', state)
+    console.log('summary:', summary)
+
+    const [errorOpen, setErrorOpen] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
+
+    const handleClose = () => {
+        setErrorOpen(false);
+    };
+
+
     const openSidebar = () => {
         dispatch({ type: SIDEBAR_OPEN })
     }
@@ -75,7 +88,6 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             });
 
             if (response) {
-                setSummary(response.data)
                 dispatch({
                     type: GET_PRODUCT_SUMMARY_SUCCESS,
                     payload: response.data
@@ -91,14 +103,18 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         }
     };
 
-    const updateFilter = () => {
-        setFilters(filters);
-        fetchAllProducts(filters, currPage);
+    const updateFilter = (filters: filterType) => {
+        setFilter(filters);
+        dispatch({
+            type: UPDATE_FILTER,
+            payload: filter
+        })
     }
 
     const clearFilter = () => {
-        setFilters({});
-        fetchAllProducts(filters, currPage)
+        dispatch({
+            type: CLEAR_FILTER,
+        })
     }
 
     // Fetch all products
@@ -140,10 +156,14 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             })
         }
     }
+
     React.useEffect(() => {
         fetchSummary()
-        fetchAllProducts(filters, currPage)
-    }, [currPage, filters])
+    }, [])
+
+    React.useEffect(() => {
+        fetchAllProducts(state.filters, currPage)
+    }, [currPage, state.filters])
 
     const fetchSingleProduct = (name: string) => {
         dispatch({
@@ -160,11 +180,13 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
                     payload: singleProduct,
                 })
             }
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
+            setErrorMessage(error)
             dispatch({
                 type: GET_SINGLE_PRODUCT_ERROR
             })
+            return <AlertNotification message={errorMessage} open={errorOpen} onClose={handleClose} severity="error" />
+
         }
     }
 
@@ -176,7 +198,7 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             openSidebar,
             closeSidebar,
             fetchSingleProduct,
-            setFilters,
+            setFilter,
             clearFilter,
             setCurrPage,
             updateFilter

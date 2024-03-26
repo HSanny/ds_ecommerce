@@ -19,7 +19,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ value, onChange }) => {
                 onChange={e => setSearchTerm(e.target.value)}
             />
             <Button
-                variant="contained"
+                variant="outlined"
                 onClick={() => onChange(searchTerm)}
             >
                 Search

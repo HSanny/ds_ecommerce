@@ -10,12 +10,12 @@ import {
     GET_PRODUCT_SUMMARY_BEGIN,
     GET_PRODUCT_SUMMARY_ERROR,
     GET_PRODUCT_SUMMARY_SUCCESS,
+    UPDATE_FILTER,
+    CLEAR_FILTER,
 } from "../actions/productActions";
 import { initialProductsStateType } from "../types/productType";
 
 const productsReducer = (state: initialProductsStateType, action: any) => {
-    console.log("state:", state)
-    console.log("action", action)
     if (action.type === SIDEBAR_OPEN) {
         return { ...state, isSidebarOpen: true }
     }
@@ -25,7 +25,6 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
     }
 
     if (action.type === GET_PRODUCTS_BEGIN) {
-        console.log('product loading....')
         return { ...state, productsLoading: true }
     }
 
@@ -85,10 +84,18 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
     }
     if (action.type === GET_PRODUCT_SUMMARY_SUCCESS) {
         // check if it returns the correct productDataType object instead of an array
-        return { ...state, summaryLoading: false }
+        return { ...state, summary:action.payload[0], summaryLoading: false }
     }
     if (action.type === GET_PRODUCT_SUMMARY_ERROR) {
         return { ...state, summaryError: true, summaryLoading: false }
+    }
+
+    if (action.type === UPDATE_FILTER) {
+        return { ...state, filters: action.payload }
+    }
+
+    if (action.type === CLEAR_FILTER) {
+        return { ...state, filters: {} }
     }
     // return state
     throw new Error(`No Matching "${action.type}" - action type`)

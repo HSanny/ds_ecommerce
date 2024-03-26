@@ -33,7 +33,7 @@ export type initialProductsStateType = {
     fetchSingleProduct: (id: string) => void
     fetchAllProducts: (filters: filterType, pageNumber: number) => void
     updateFilter: (filters: filterType) => void
-    setFilters: (filters: filterType) => void
+    setFilter: (filters: filterType) => void
     clearFilter: () => void
     setCurrPage: (currPage: number) => void
     productsLoading: boolean

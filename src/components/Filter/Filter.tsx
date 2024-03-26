@@ -4,13 +4,16 @@ import { useProductsContext } from "../../contexts/productsContext";
 import SearchFilter from "./SearchFilter";
 import CategoryFilter from "./CategoryFilters";
 import PriceRangeFilter from "./PriceRangeFilter";
+import { isValidSummary } from "../../utils/helpers";
 
 const Filter = () => {
-    const { filters, updateFilter, clearFilter } = useProductsContext();
+    const { filters, updateFilter, clearFilter, summary } = useProductsContext();
 
     const [searchTerm, setSearchTerm] = React.useState('');
     const [selectedCategory, setSelectedCategory] = React.useState({ main: '', sub: '' });
-    const [priceRange, setPriceRange] = React.useState([0, 100]); // example range
+    const min = isValidSummary(summary) ? summary.min_actual_price : 0
+    const max = isValidSummary(summary) ? summary.max_actual_price : 99999
+    const [priceRange, setPriceRange] = React.useState([min, max]); // example range
     // ... other filter states
 
     const handleSearchChange = (term: any) => {
@@ -28,9 +31,21 @@ const Filter = () => {
       updateFilter({ ...filters, price_gte: range[0], price_lte: range[1] });
     };
 
-    // ... similar handlers for other filters
-
-
+  // ... similar handlers for other filters
+    console.log("search term: ", searchTerm)
+    console.log("selectedCategory:", selectedCategory)
+    console.log("priceRange: ", priceRange)
+    
+  React.useEffect(() => {
+    updateFilter({
+      ...filters,
+      search: searchTerm,
+      main_category: selectedCategory.main,
+      sub_category: selectedCategory.sub,
+      price_gte: priceRange[0],
+      price_lte: priceRange[1]
+    })
+  }, [searchTerm, selectedCategory, priceRange])
     return (
         <Wrapper>
         {/* <FilterButton

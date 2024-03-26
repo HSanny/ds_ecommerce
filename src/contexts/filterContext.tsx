@@ -3,15 +3,12 @@ import { filterType, initialStateType } from "../types/filterTypes";
 import { useProductsContext } from "./productsContext";
 import filterReducer from "../reducers/filterReducer";
 import {
-    CLEAR_FILTERS,
-    FILTER_PRODUCTS,
     HANDLE_CLICK_FROM_SERVICES,
     LOAD_PRODUCTS,
     RESET_IS_CLICK_FROM_SERVICES,
     SET_GRID_VIEW,
     SET_LIST_VIEW,
     SORT_PRODUCTS,
-    UPDATE_FILTERS,
     UPDATE_SORT
 } from "../actions/filterActions";
 
@@ -26,7 +23,6 @@ const initialState: initialStateType = {
     updateSort: () => { },
     filters: {},
     updateFilter: () => { },
-    clearFilter: () => { },
     isClickFromServices: false,
     handleClickFromService: () => { },
     resetIsClickFromService: () => { },
@@ -68,10 +64,6 @@ export const FilterProvider: React.FC<PropsWithChildren> = ({ children }) => {
         fetchAllProducts(filters, 1)
     }
 
-    const clearFilter = () => {
-        dispatch({ type: CLEAR_FILTERS })
-    }
-
     const handleClickFromService = () => {
         dispatch({ type: HANDLE_CLICK_FROM_SERVICES })
     }
@@ -89,7 +81,6 @@ export const FilterProvider: React.FC<PropsWithChildren> = ({ children }) => {
                 setListView,
                 updateSort,
                 updateFilter,
-                clearFilter,
                 handleClickFromService,
                 resetIsClickFromService,
             }}

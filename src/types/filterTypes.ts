@@ -26,7 +26,6 @@ export type initialStateType = {
     updateSort: (e: React.ChangeEvent<HTMLSelectElement>) => void
     filters: filterType
     updateFilter: (e: any) => void
-    clearFilter: () => void
     isClickFromServices: boolean
     handleClickFromService: () => void
     resetIsClickFromService: () => void
