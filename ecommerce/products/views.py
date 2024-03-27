@@ -10,22 +10,17 @@ import json
 
 from django.http import JsonResponse
 from django.core.paginator import Paginator
-from utils.mongo import get_db_handle
+from mongo_utils.mongo import get_db_handle
 
 from collections import defaultdict
 from django.views.decorators.csrf import csrf_exempt
-
-import logging
-
-logger = logging.getLogger(__name__)
+from mongo_utils.util import clean_product_name
 
 @csrf_exempt
 def amazon_products_list(request):
     db_handle, _ = get_db_handle()
     # use the collection name as per your MongoDB setup
     collection = db_handle.amazon_products 
-    print("entered amazon_product_list view")
-    logger.info("Entered amazon_products_list v")
     # documents = collection.find({})
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -37,9 +32,9 @@ def amazon_products_list(request):
         filter_params = [
             'search',
             'main_category', 'sub_category',
-            'actual_price_gte', 'actual_price_lte',
-            'discount_price_gte', 'discount_price_lte', 
-            'rating'
+            # 'actual_price_gte', 'actual_price_lte',
+            # 'discount_price_gte', 'discount_price_lte', 
+            'ratings_gte', 'ratings_lte'
         ]
 
         for param in filter_params:
@@ -58,8 +53,8 @@ def amazon_products_list(request):
                     if not field in query:
                         query[field] = {} 
 
-                        # Add the operator ($gte, $lte) and value to the query for the field
-                    query[field]['$' + operator] = float(value) if 'price' in field else int(value)
+                    # Add the operator ($gte, $lte) and value to the query for the field
+                    query[field]['$' + operator] = float(value)
                 else:
                     # Handle exact match filters (e.g., category)
                     query[param] = value
@@ -69,8 +64,6 @@ def amazon_products_list(request):
         
         # Pagination
         page_number = int(data.get('page', 1))
-        print("received page number", page_number)
-        logger.info(f"received page number: {page_number}")
         items_per_page = 10 # limit
         skip_items = (page_number - 1) * items_per_page
 
@@ -86,11 +79,9 @@ def amazon_products_list(request):
         #     {item: data[item] for item in data if item != '_id'} for data in documents
         # ]
 
-        logger.info(f"MongoDB Query: {query}")
-        print("MongoDB Query", query)
         
         product_list = [
-            {key: value for key, value in doc.items() if key != "_id"} for doc in documents
+            {key: clean_product_name(value) if key == "name" else value for key, value in doc.items() if key != "_id"} for doc in documents
         ]
 
         response_data = {

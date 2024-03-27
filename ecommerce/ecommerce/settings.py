@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'products',
     'corsheaders',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -84,17 +85,19 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # Note : using PyMongo will mean to establish MongoDB connection directly in the code(pymongo.py)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME': 'ecommerce',
-#         'ENFORCE_SCHEMA': False,
-#         'CLIENT': {
-#             'host': 'mongodb://localhost:27017/',
-#         }
-#     }
-# }
+# commented to use to connect to PostgreSQL
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ecommerce_accounts',
+        'USER':'',
+        'PASSWORD':'',
+        'HOST':'localhost',
+        'PORT':'5432'
+    }
+}
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
