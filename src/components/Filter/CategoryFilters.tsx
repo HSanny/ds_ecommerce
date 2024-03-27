@@ -10,7 +10,7 @@ type CategoryFilterProps = {
 
 const CategoryFilter: React.FC<CategoryFilterProps> = ({ value, onChange }) => {
 
-    const { summary } = useProductsContext()
+    const { filters, summary } = useProductsContext()
 
     const [selectedMainCategory, setSelectedMainCategory] = React.useState(value.main);
     const [selectedSubCategory, setSelectedSubCategory] = React.useState(value.sub);
@@ -29,7 +29,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ value, onChange }) => {
             <div style={{ marginBottom: '20px' }}>
                 <div style={{ marginBottom: '10px' }}>Main Category</div>
                 <Select
-                    value={selectedMainCategory}
+                    value={filters.main_category}
                     onChange={handleMainCategoryChange}
                     sx={{ 'width': '100%' }}
                 >
@@ -42,7 +42,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ value, onChange }) => {
             <div style={{ marginBottom: '20px' }}>
                 <div style={{ marginBottom: '10px' }}>Sub Category</div>
                 <Select
-                    value={selectedSubCategory}
+                    value={filters.sub_category}
                     onChange={handleSubCategoryChange}
                     sx={{ 'width': '100%' }}
                 >

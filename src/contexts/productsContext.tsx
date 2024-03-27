@@ -17,7 +17,7 @@ import {
 } from "../actions/productActions";
 import { initialProductsStateType, productDataType } from "../types/productType";
 import axios from "axios"
-import { filterType } from "../types/filterTypes";
+import { filterType, initialFilterState } from "../types/filterTypes";
 import { SummaryType, initialSummary } from "../types/summaryType";
 import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
 import getCsrfToken, { isValidSummary } from "../utils/helpers";
@@ -43,7 +43,7 @@ const initialProductsState: initialProductsStateType = {
     singleProductLoading: false,
     singleProductError: false,
     currPage: 0,
-    filters: {},
+    filters: initialFilterState,
     summary: {},
     summaryLoading: false,
     summaryError: false,
@@ -58,7 +58,7 @@ export const useProductsContext = () => {
 export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = React.useReducer(productsReducer, initialProductsState);
     const [summary, setSummary] = React.useState<SummaryType>(initialSummary)
-    const [filter, setFilter] = React.useState<filterType>({})
+    const [filter, setFilter] = React.useState<filterType>(initialFilterState)
     const [currPage, setCurrPage] = React.useState(1)
     console.log('state:', state)
     console.log('summary:', summary)
@@ -118,7 +118,7 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
 
     // Fetch all products
-    const fetchAllProducts = async (filter: filterType = {}, page: number = 1) => {
+    const fetchAllProducts = async (filter: filterType, page: number = 1) => {
         dispatch({ type: GET_PRODUCTS_BEGIN })
         try {
             const payload = {

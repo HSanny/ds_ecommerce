@@ -3,38 +3,32 @@ import styled from "styled-components";
 import { useProductsContext } from "../../contexts/productsContext";
 import SearchFilter from "./SearchFilter";
 import CategoryFilter from "./CategoryFilters";
-import PriceRangeFilter from "./PriceRangeFilter";
-import { isValidSummary } from "../../utils/helpers";
+import PriceRangeFilter from "./RatingRangeFilter";
 
 const Filter = () => {
     const { filters, updateFilter, clearFilter, summary } = useProductsContext();
 
     const [searchTerm, setSearchTerm] = React.useState('');
     const [selectedCategory, setSelectedCategory] = React.useState({ main: '', sub: '' });
-    const min = isValidSummary(summary) ? summary.min_actual_price : 0
-    const max = isValidSummary(summary) ? summary.max_actual_price : 99999
-    const [priceRange, setPriceRange] = React.useState([min, max]); // example range
+    const [ratingRange, setRatingRange] = React.useState<number[]>([filters.ratings_gte, filters.ratings_lte]); // example range
     // ... other filter states
 
     const handleSearchChange = (term: any) => {
       setSearchTerm(term);
-      updateFilter({ ...filters, search: term });
     };
 
     const handleCategoryChange = (mainCategory: string, subCategory: string) => {
       setSelectedCategory({ main: mainCategory, sub: subCategory });
-      updateFilter({ ...filters, main_category: mainCategory, sub_category: subCategory });
     };
 
-    const handlePriceChange = (range:any) => {
-      setPriceRange(range);
-      updateFilter({ ...filters, price_gte: range[0], price_lte: range[1] });
+    const handleRatingChange = (rate:any) => {
+      setRatingRange(rate);
     };
 
   // ... similar handlers for other filters
     console.log("search term: ", searchTerm)
     console.log("selectedCategory:", selectedCategory)
-    console.log("priceRange: ", priceRange)
+    console.log("rate: ", ratingRange)
     
   React.useEffect(() => {
     updateFilter({
@@ -42,10 +36,10 @@ const Filter = () => {
       search: searchTerm,
       main_category: selectedCategory.main,
       sub_category: selectedCategory.sub,
-      price_gte: priceRange[0],
-      price_lte: priceRange[1]
+      ratings_gte: ratingRange[0],
+      ratings_lte: ratingRange[1]
     })
-  }, [searchTerm, selectedCategory, priceRange])
+  }, [searchTerm, selectedCategory, ratingRange])
     return (
         <Wrapper>
         {/* <FilterButton
@@ -58,7 +52,7 @@ const Filter = () => {
 
           <SearchFilter value={searchTerm} onChange={handleSearchChange} />
           <CategoryFilter value={selectedCategory} onChange={handleCategoryChange} />
-          <PriceRangeFilter value={priceRange} onChange={handlePriceChange} />
+          <PriceRangeFilter value={ratingRange} onChange={handleRatingChange} />
           {/* Clear Filters */}
           <button type="button" className="clear-btn" onClick={() => clearFilter()}>
             Clear Filter

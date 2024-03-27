@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { filterType, initialStateType } from "../types/filterTypes";
+import { filterType, initialFilterState, initialStateType } from "../types/filterTypes";
 import { useProductsContext } from "./productsContext";
 import filterReducer from "../reducers/filterReducer";
 import {
@@ -21,7 +21,7 @@ const initialState: initialStateType = {
     setListView: () => { },
     sort: 'price-lowest',
     updateSort: () => { },
-    filters: {},
+    filters: initialFilterState,
     updateFilter: () => { },
     isClickFromServices: false,
     handleClickFromService: () => { },
