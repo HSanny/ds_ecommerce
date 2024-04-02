@@ -8,12 +8,12 @@ type CategoryFilterProps = {
     onChange: (mainCategory: string, subCategory: string) => void
 }
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({value, onChange}) => {
+const CategoryFilter: React.FC<CategoryFilterProps> = ({ value, onChange }) => {
 
-    const { summary } = useProductsContext()
+    const { filters, summary } = useProductsContext()
 
-    const [selectedMainCategory, setSelectedMainCategory] = React.useState('');
-    const [selectedSubCategory, setSelectedSubCategory] = React.useState('');
+    const [selectedMainCategory, setSelectedMainCategory] = React.useState(value.main);
+    const [selectedSubCategory, setSelectedSubCategory] = React.useState(value.sub);
 
     const handleMainCategoryChange = (event: any) => {
         setSelectedMainCategory(event.target.value);
@@ -24,28 +24,36 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({value, onChange}) => {
         setSelectedSubCategory(event.target.value);
         onChange(selectedMainCategory, event.target.value);
     };
-
     return (
         <div>
-            <Select
-                value={selectedMainCategory}
-                onChange={handleMainCategoryChange}
-            >
-                {isValidSummary(summary) && summary.main_categories?.map((category) => (
-                    <MenuItem key={category} value={category}>{category}</MenuItem>
-                ))}
-            </Select>
-            <Select
-                value={selectedSubCategory}
-                onChange={handleSubCategoryChange}
-            >
-                {isValidSummary(summary) && summary.sub_categories.map((category) => (
-                    <MenuItem key={category} value={category}>{category}</MenuItem>
-                ))}
-            </Select>
-        </div>
+            <div style={{ marginBottom: '20px' }}>
+                <div style={{ marginBottom: '10px' }}>Main Category</div>
+                <Select
+                    value={filters.main_category}
+                    onChange={handleMainCategoryChange}
+                    sx={{ 'width': '100%' }}
+                >
+                    {isValidSummary(summary) && summary.main_categories?.map((category) => (
+                        <MenuItem key={category} value={category}>{category}</MenuItem>
+                    ))}
+                </Select>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+                <div style={{ marginBottom: '10px' }}>Sub Category</div>
+                <Select
+                    value={filters.sub_category}
+                    onChange={handleSubCategoryChange}
+                    sx={{ 'width': '100%' }}
+                >
+                    {isValidSummary(summary) && summary.sub_categories.map((category) => (
+                        <MenuItem key={category} value={category}>{category}</MenuItem>
+                    ))}
+                </Select>
+            </div>
+        </div >
     )
 
-} 
+}
 
 export default CategoryFilter

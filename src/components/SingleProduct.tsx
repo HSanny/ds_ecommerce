@@ -27,10 +27,6 @@ const SingleProduct = () => {
   if (error) return <Error />
   if (!singleProduct) return <NotFound />
 
-  // console.log("loading: ", loading)
-  // console.log("error: ", error)
-  // console.log("single product: ", singleProduct)
-
   const { image, name, actual_price } = singleProduct as productDataType
 
   // Check if images array is available and has elements

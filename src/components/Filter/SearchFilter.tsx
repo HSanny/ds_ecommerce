@@ -14,7 +14,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ value, onChange }) => {
         <div>
             <TextField
                 label="Search"
-                variant="outlined"
+                variant="filled"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
             />

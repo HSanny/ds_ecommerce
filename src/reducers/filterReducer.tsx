@@ -6,7 +6,6 @@ import {
     SORT_PRODUCTS,
     UPDATE_FILTERS,
     FILTER_PRODUCTS,
-    CLEAR_FILTERS,
     HANDLE_CLICK_FROM_SERVICES,
     RESET_IS_CLICK_FROM_SERVICES,
     UPDATE_FILTERS_AND_FETCH,
@@ -88,7 +87,6 @@ const filterReducer = (
     // // filter products
     if (action.type === FILTER_PRODUCTS) {
         const { allProducts } = state
-        console.log('ap', allProducts)
         const {
             search,
             main_category,
@@ -99,7 +97,6 @@ const filterReducer = (
             // discount_price_lte,
             // rating,
         } = state.filters
-        console.log('search: ', search, 'filter: ', state.filters)
         let temp = [...allProducts]
         // filter by searchTerm
         if (search) {
@@ -129,13 +126,6 @@ const filterReducer = (
 
         return { ...state, filteredProducts: temp }
 
-    }
-
-    if (action.type === CLEAR_FILTERS) {
-        return {
-            ...state,
-            filters: {},
-        }
     }
 
     if (action.type === HANDLE_CLICK_FROM_SERVICES) {

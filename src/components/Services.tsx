@@ -5,9 +5,11 @@ import { useFilterContext } from "../contexts/filterContext";
 import { MdOutlineSmartToy } from "react-icons/md";
 import { GiClothes } from "react-icons/gi";
 import { FaBaby } from "react-icons/fa";
+import { useProductsContext } from "../contexts/productsContext";
 
 const Services = () => {
-    const { updateFilter, handleClickFromService, clearFilter } = useFilterContext();
+  const { updateFilter, handleClickFromService } = useFilterContext();
+  const { clearFilter } = useProductsContext()
     const services = [
       {
         id: 1,
