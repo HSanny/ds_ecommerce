@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import NaviLinks from "./NaviLinks";
 import { useProductsContext } from "../contexts/productsContext";
+import CartButtons from "./CartButtons";
 
 const Sidebar = () => {
 
@@ -25,7 +26,7 @@ const Sidebar = () => {
                 {/* NaviLinks  */}
                 <NaviLinks className="links" isSidebar={true} />
                 {/* CartButtons */}
-
+                <CartButtons />
             </aside>
         </SidebarWrapper>
     )
