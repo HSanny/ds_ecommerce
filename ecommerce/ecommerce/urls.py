@@ -28,5 +28,10 @@ urlpatterns = [
     path(
         "products/",
         include("products.urls")
+    ),
+
+    path(
+        "auth/",
+        include("users.urls")
     )
 ]

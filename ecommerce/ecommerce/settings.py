@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'products',
     'corsheaders',
-    'accounts',
+    'orders',
+    'rest_framework',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -53,11 +55,11 @@ MIDDLEWARE = [
 # Optimizing Response Time: Handling CORS before other potentially time-consuming middleware can optimize response times for blocked cross-origin requests, as it avoids unnecessary processing for requests that will ultimately be rejected due to CORS policies.
     
     'corsheaders.middleware.CorsMiddleware', 
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
@@ -89,15 +91,33 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecommerce_accounts',
-        'USER':'',
-        'PASSWORD':'',
-        'HOST':'localhost',
+        'NAME': 'postgres',
+        'USER':'postgres',
+        'PASSWORD':'postgres',
+        'HOST':'104.198.198.1',
+        'PORT':'5432'
+    },
+    'auth_db': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'auth_db',
+        'USER':'admin',
+        'PASSWORD':'admin',
+        'HOST':'104.198.198.1',
+        'PORT':'5432'
+    },
+    'transaction_db': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'transaction_db',
+        'USER':'admin',
+        'PASSWORD':'admin',
+        'HOST':'104.198.198.1',
         'PORT':'5432'
     }
 }
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+DATABASES_ROUTERS = ['ecommerce.routers.PostgresRouter']
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -140,46 +160,28 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS setting
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
 
-# CORS_ALLOW_ALL_ORIGINS = False  # Make sure this is False
-
-# Ensure that Django will accept credentials (cookies, HTTP authentication) in the requests
-
-# CORS_ALLOW_HEADERS = [
-#     'accept',
-#     'accept-encoding',
-#     'authorization',
-#     'content-type',
-#     'dnt',
-#     'origin',
-#     'user-agent',
-#     'x-csrftoken',  # CSRF Token header
-#     'x-requested-with',  # Additional headers can be added here
-# ]
-# If your frontend and backend are served under different subdomains or domains, 
-# you might need to configure the domain for the CSRF cookie so it's accessible to your frontend. 
-CSRF_COOKIE_DOMAIN = ".example.com"  # Adjust the domain accordingly
-# settings.py
-
-# If you're serving your frontend and backend from different schemes (http vs https), you might need this
-CSRF_COOKIE_SECURE = True  # Use only if your site is served over HTTPS
-
-# For cross-domain AJAX requests, you may need to set the CSRF cookie's SameSite attribute to 'None'
-CSRF_COOKIE_SAMESITE = 'None'  # Important: Ensure you understand the security implications
-
-# Note: When setting SameSite to 'None', ensure CSRF_COOKIE_SECURE is True and your site uses HTTPS
+# Ensure CSRF_COOKIE_NAME is set to the default or matches your frontend configuration
+CSRF_COOKIE_NAME = 'csrftoken'  
+CSRF_COOKIE_DOMAIN = 
+# Ensure CSRF_COOKIE_HTTPONLY is False if you need to read the CSRF token with JavaScript
+CSRF_COOKIE_HTTPONLY = False  
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Frontend application origin
 ]
-CORS_ALLOW_CREDENTIALS = True
-# # settings.py
-# SESSION_COOKIE_DOMAIN = None  # Default: Use the domain of the request
-# CSRF_COOKIE_DOMAIN = None     # Default: Use the domain of the request
-# CSRF_COOKIE_PATH = '/'        # Default: Set at the root path
-# CSRF_USE_SESSIONS = False     # Default: CSRF token stored in a cookie
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+]
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
 
 # logging setting 
 LOGGING = {
