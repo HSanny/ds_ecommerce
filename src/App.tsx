@@ -6,6 +6,7 @@ import NaviBar from './components/NaviBar';
 import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
 import SingleProduct from './components/SingleProduct';
+import Login from './components/Auth/Login';
 
 function App() {
   const AppRoutes = createBrowserRouter([
@@ -31,6 +32,14 @@ function App() {
         {
           path: `/products/:slug`,
           element: <SingleProduct />
+        },
+        {
+          path: `/shipment`,
+          element: <></>
+        },
+        {
+          path: `/authentication`,
+          element: <Login />
         }
     // {
     //   index: true,

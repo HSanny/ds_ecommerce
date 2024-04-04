@@ -20,7 +20,7 @@ import axios from "axios"
 import { filterType, initialFilterState } from "../types/filterTypes";
 import { SummaryType, initialSummary } from "../types/summaryType";
 import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
-import getCsrfToken, { isValidSummary } from "../utils/helpers";
+import { getCsrfToken } from "../utils/helpers";
 import AlertNotification from "../components/common/AlertNotification";
 
 

@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { PropsWithChildren } from "react";
 import { UserType, initialUserState } from "../types/userType";
+import { LOGIN_ENDPOINT } from "../utils/api";
+import { getCsrfToken } from "../utils/helpers";
 
 interface AuthContextType {
     user: UserType;
@@ -17,15 +19,29 @@ export const useAuthContext = () => {
 }
 
 export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    
+
     const [user, setUser] = React.useState<UserType>(initialUserState);
+    const [errors, setErrors] = React.useState<string[]>([]);
 
     const login = async (email: string, password: string) => {
         try {
-            const response = await axios.post('/api/login', {email, password})
+            const csrfToken = getCsrfToken()
+            const response = await axios.post(LOGIN_ENDPOINT, {
+                email, password
+            }, {
+                withCredentials: true,
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json',
+                }
+            })
             return response.data;
         } catch (error) {
-            console.log('Login Error:', error)
+            if (axios.isAxiosError(error)) {
+                setErrors(error.response?.data?.errors || []);
+            } else {
+                console.error('Unexpected error:', error);
+            }
         }
     }
 
@@ -47,7 +63,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
 
     return (
-        <Authcontext.Provider value={{user, login, onLogin, register, logout}}>
+        <Authcontext.Provider value={{ user, login, onLogin, register, logout }}>
             {children}
         </Authcontext.Provider>
     )
