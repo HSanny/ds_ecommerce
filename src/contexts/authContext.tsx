@@ -1,13 +1,13 @@
 import axios from "axios";
 import React, { PropsWithChildren } from "react";
-import { UserType, initialUserState } from "../types/userType";
+import { UserType, initialUserState, userDataType } from "../types/authType";
 import { LOGIN_ENDPOINT } from "../utils/api";
 import { getCsrfToken } from "../utils/helpers";
 
 interface AuthContextType {
     user: UserType;
     login: (email: string, password: string) => {};
-    register: (useData: any) => void;
+    register: (useData: any) => {};
     logout: () => void;
     onLogin: (userData: any) => void;
 }
@@ -22,6 +22,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const [user, setUser] = React.useState<UserType>(initialUserState);
     const [errors, setErrors] = React.useState<string[]>([]);
+    const [userData, setUserData] = React.useState<userDataType>();
 
     const login = async (email: string, password: string) => {
         try {
@@ -45,13 +46,13 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
         }
     }
 
-    const onLogin = (userData: any) => {
-        setUser(userData)
+    const onLogin = (userData: userDataType) => {
+        setUserData(userData)
     }
 
-    const register = async (userData: any) => {
+    const register = async (registerData: any) => {
         try {
-            const response = await axios.post('/api/register', userData)
+            const response = await axios.post('/api/register', registerData)
             return response.data
         } catch (error) {
             console.log('Registration error: ', error);
@@ -61,6 +62,8 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const logout = () => {
         //TODO
     }
+
+    React.useEffect
 
     return (
         <Authcontext.Provider value={{ user, login, onLogin, register, logout }}>

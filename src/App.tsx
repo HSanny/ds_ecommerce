@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
 import SingleProduct from './components/SingleProduct';
 import Login from './components/Auth/Login';
+import SignUp from './components/Auth/Signup';
 
 function App() {
   const AppRoutes = createBrowserRouter([
@@ -38,9 +39,13 @@ function App() {
           element: <></>
         },
         {
-          path: `/authentication`,
-          element: <Login />
-        }
+          path: `/authentication/login`,
+          element: <Login />,
+        },
+        {
+          path: '/authentication/sign-up',
+          element: <SignUp />
+        },
     // {
     //   index: true,
     //   path: '/products/',

@@ -2,16 +2,16 @@ import React from "react";
 import { TextField, Button, Container, Box, Paper, Typography } from '@mui/material';
 import { useAuthContext } from "../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
+import { RegisterDataType, userDataType } from "../../types/authType";
 
-const Login = () => {
-    const [email, setEmail] = React.useState('')
-    const [password, setPassword] = React.useState('')
-    const { login, onLogin } = useAuthContext();
+const SignUp = () => {
+    const [registerData, setRegisterData] = React.useState<RegisterDataType>()
+    const { register, onLogin } = useAuthContext();
 
     const navigate = useNavigate() // for redirecting after login
 
     const handleSubmit = async () => {
-        const userData = await login(email, password);
+        const userData = await register(registerData);
         if (userData) {
             onLogin(userData)
             navigate('/products')
@@ -25,7 +25,7 @@ const Login = () => {
                     Sign in
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                    <TextField
+                    {/* <TextField
                         margin="normal"
                         required
                         fullWidth
@@ -48,21 +48,12 @@ const Login = () => {
                         autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                    />
+                    /> */}
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
-                    >
-                        Sign In
-                    </Button>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        onClick={() => navigate('/authenticaion/sign-up')}
                     >
                         Sign Up
                     </Button>
@@ -72,4 +63,4 @@ const Login = () => {
     );
 }
 
-export default Login
+export default SignUp

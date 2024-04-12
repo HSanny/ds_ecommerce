@@ -9,8 +9,8 @@ const LoginButton = () => {
 
     return (
         <ButtonsWrapper className="cart-btn-wrapper">
-            <Link to="/authentication" className="cart-btn" onClick={closeSidebar}>
-                LOGIN
+            <Link to="/authentication/login" className="cart-btn" onClick={closeSidebar}>
+                Login
             </Link>
         </ButtonsWrapper>
     )
