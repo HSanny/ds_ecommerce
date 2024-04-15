@@ -27,14 +27,22 @@ export type RegisterDataType = {
     email: string;
     password: string;
     username: string;
-    paymentMethod?: PaymentMethodType,
+    paymentMethod: PaymentMethodType,
     billingAddress?: string,
     shippingAddress?: string,
 };
 
+export const initialRegisterType:RegisterDataType = {
+    email: "",
+    password: "",
+    username: "",
+    paymentMethod: { type: '' },
+}
+
 export type PaymentMethodType = {
-    cardNumber: string,
-    expiryDate: string,
-    cvv: string,
-    cardholderName: string,
+    type: 'Credit Card' | 'Debit Card' | 'PayPal' | '' ,
+    cardNumber?: string,
+    expiryDate?: string,
+    cvv?: string,
+    cardholderName?: string,
 };

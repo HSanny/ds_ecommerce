@@ -9,7 +9,7 @@ const LoginButton = () => {
 
     return (
         <ButtonsWrapper className="cart-btn-wrapper">
-            <Link to="/authentication/login" className="cart-btn" onClick={closeSidebar}>
+            <Link to="/authentication/login" className="auth-btn" onClick={closeSidebar}>
                 Login
             </Link>
         </ButtonsWrapper>

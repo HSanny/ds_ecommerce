@@ -22,7 +22,7 @@ const Login = () => {
         <Container component="main" maxWidth="xs">
             <Paper elevation={6} sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Log In
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                     <TextField
@@ -62,7 +62,7 @@ const Login = () => {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
-                        onClick={() => navigate('/authenticaion/sign-up')}
+                        onClick={() => navigate('/authentication/sign-up')}
                     >
                         Sign Up
                     </Button>
