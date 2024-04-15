@@ -1,10 +1,14 @@
-import React from "react";
 import NavWrapper from "./common/NavWrapper";
 import NaviLinks from "./NaviLinks";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
+import CartButtons from "./CartButtons";
+import { useAuthContext } from "../contexts/authContext";
+import LoginButton from "./LoginButton";
 
 const NaviBar = () => {
+    const { user } = useAuthContext()
+    const navigate = useNavigate()
     // const { openSidebar } = useProductsContext()
     return (
         <NavWrapper>
@@ -21,6 +25,12 @@ const NaviBar = () => {
                 </div>
                 <NaviLinks className="nav-links" />
             </div>
+            {user.isLogin ? (
+                <CartButtons />
+            ) : (
+                <LoginButton />
+            )
+            }
         </NavWrapper>
     )
 }

@@ -17,7 +17,7 @@ const WelcomeBanner = () => {
                         for you to pick, with guaranteed quality and good price!
                     </p>
                 </>
-                <Link to='' className="btn">
+                <Link to='/products' className="btn">
                     SHOP NOW
                 </Link>
             </article>
