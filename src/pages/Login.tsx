@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField, Button, Container, Box, Paper, Typography } from '@mui/material';
-import { useAuthContext } from "../../contexts/authContext";
+import { useAuthContext } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -57,6 +57,16 @@ const Login = () => {
                     >
                         Sign In
                     </Button>
+                    <Typography
+                        component="p"
+                        sx={{
+                            mt: 3,
+                            mb: 2,
+                            textAlign: 'center'
+                        }}
+                    >
+                        Not a registered user ?
+                    </Typography>
                     <Button
                         type="submit"
                         fullWidth

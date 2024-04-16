@@ -1,8 +1,9 @@
 import React from "react";
 import { TextField, Button, Container, Box, Paper, Typography, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { useAuthContext } from "../../contexts/authContext";
+import { useAuthContext } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
-import { PaymentMethodType, RegisterDataType, initialRegisterType, userDataType } from "../../types/authType";
+import { PaymentMethodType, RegisterDataType, initialRegisterType, userDataType } from "../types/authType";
+import { relative } from "path";
 
 const SignUp = () => {
     const [registerData, setRegisterData] = React.useState<RegisterDataType>(initialRegisterType)
@@ -217,6 +218,26 @@ const SignUp = () => {
                         sx={{ mt: 3, mb: 2 }}
                     >
                         Sign Up
+                    </Button>
+                    <Typography
+                        component="p"
+                        sx={{
+                            mt: 1,
+                            mb: 1,
+                            textAlign: 'center',
+                            fontSize: 'relative'
+                        }}
+                    >
+                        Already have an account ?
+                    </Typography>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() => navigate('/authentication/login')}
+                    >
+                        Sign In
                     </Button>
                 </Box>
             </Paper>

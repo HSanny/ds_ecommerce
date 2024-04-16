@@ -6,8 +6,8 @@ import NaviBar from './components/NaviBar';
 import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
 import SingleProduct from './components/SingleProduct';
-import Login from './components/Auth/Login';
-import SignUp from './components/Auth/Signup';
+import Login from './pages/Login';
+import SignUp from './pages/Signup';
 
 function App() {
   const AppRoutes = createBrowserRouter([
@@ -23,12 +23,12 @@ function App() {
         {
           path: '/products',
           element: <ProductsPage />,
-      //     children: [
-      //       {
-      //         path: ':slug',
-      //         element: <SingleProduct />,
-      //       }
-      // ]
+          //     children: [
+          //       {
+          //         path: ':slug',
+          //         element: <SingleProduct />,
+          //       }
+          // ]
         },
         {
           path: `/products/:slug`,
@@ -46,37 +46,37 @@ function App() {
           path: '/authentication/sign-up',
           element: <SignUp />
         },
-    // {
-    //   index: true,
-    //   path: '/products/',
-    //   element: <SingleProduct />
-    // }
-    // {
-    //   index: true,
-    //   path: '/shipment',
-    //   element: <ShipmentPage />
-    // },
-    // {
-    //   index: true,
-    //   path: '/cart',
-    //   element: <CartPage />
-    // }
-  ]
+        // {
+        //   index: true,
+        //   path: '/products/',
+        //   element: <SingleProduct />
+        // }
+        // {
+        //   index: true,
+        //   path: '/shipment',
+        //   element: <ShipmentPage />
+        // },
+        // {
+        //   index: true,
+        //   path: '/cart',
+        //   element: <CartPage />
+        // }
+      ]
     },
   ])
-return (
-  <RouterProvider router={AppRoutes} />
-  // <BrowserRouter>
-  //   <Routes>
-  //     {routes.map((route) => (
-  //       <Route
-  //         path={route.path}
-  //         element={route.component}
-  //       />
-  //     ))}
-  //   </Routes>
-  // </BrowserRouter>
-);
+  return (
+    <RouterProvider router={AppRoutes} />
+    // <BrowserRouter>
+    //   <Routes>
+    //     {routes.map((route) => (
+    //       <Route
+    //         path={route.path}
+    //         element={route.component}
+    //       />
+    //     ))}
+    //   </Routes>
+    // </BrowserRouter>
+  );
 }
 
 export default App;
@@ -87,7 +87,6 @@ const Layout = () => {
       <ScrollPage />
       <NaviBar />
       <Outlet /> {/* This will render the child routes */}
-      {/* <Footer /> Add your Footer component here if needed */}
       <Footer />
     </>
   )
