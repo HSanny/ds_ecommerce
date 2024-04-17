@@ -25,6 +25,7 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [userData, setUserData] = React.useState<userDataType>();
 
     const login = async (email: string, password: string) => {
+        console.log('login-ing')
         try {
             const csrfToken = getCsrfToken()
             const response = await axios.post(LOGIN_ENDPOINT, {
@@ -36,8 +37,10 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
                     'Content-Type': 'application/json',
                 }
             })
+            console.log('login response', response)
             return response.data;
         } catch (error) {
+            console.log('login error', error)
             if (axios.isAxiosError(error)) {
                 setErrors(error.response?.data?.errors || []);
             } else {
@@ -63,7 +66,6 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
         //TODO
     }
 
-    React.useEffect
 
     return (
         <Authcontext.Provider value={{ user, login, onLogin, register, logout }}>

@@ -11,13 +11,13 @@ const ProductsPage: React.FC = () => {
   const { isClickFromServices, resetIsClickFromService } = useFilterContext();
   const { clearFilter } = useProductsContext();
 
-  useEffect(() => {
-    if (isClickFromServices) {
-      resetIsClickFromService();
-    } else {
-      clearFilter();
-    }
-  }, [isClickFromServices, resetIsClickFromService, clearFilter]);
+  // useEffect(() => {
+  //   if (isClickFromServices) {
+  //     resetIsClickFromService();
+  //   } else {
+  //     clearFilter();
+  //   }
+  // }, [isClickFromServices, resetIsClickFromService, clearFilter]);
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));

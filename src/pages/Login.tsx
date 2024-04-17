@@ -12,6 +12,7 @@ const Login = () => {
 
     const handleSubmit = async () => {
         const userData = await login(email, password);
+        console.log('login success', userData)
         if (userData) {
             onLogin(userData)
             navigate('/products')
