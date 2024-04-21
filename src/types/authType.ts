@@ -28,6 +28,7 @@ export type RegisterDataType = {
     password: string;
     username: string;
     paymentMethod: PaymentMethodType,
+    phoneNumber?: number,
     billingAddress?: string,
     shippingAddress?: string,
 };
