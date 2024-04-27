@@ -3,6 +3,7 @@ import React, { PropsWithChildren } from "react";
 import { UserType, initialUserState, userDataType } from "../types/authType";
 import { LOGIN_ENDPOINT } from "../utils/api";
 import { getCsrfToken } from "../utils/helpers";
+import axiosInstance from "../utils/axiosConfig";
 
 interface AuthContextType {
     user: UserType;
@@ -25,29 +26,30 @@ export const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [userData, setUserData] = React.useState<userDataType>();
 
     const login = async (email: string, password: string) => {
-        console.log('login-ing')
+        console.log('Logging in');
         try {
-            const csrfToken = getCsrfToken()
-            const response = await axios.post(LOGIN_ENDPOINT, {
-                email, password
+            const csrfToken = getCsrfToken(); // Make sure CSRF token is being fetched correctly
+            console.log('csrfToken: ', csrfToken)
+            const response = await axiosInstance.post(LOGIN_ENDPOINT, {
+                email,
+                password
             }, {
-                withCredentials: true,
                 headers: {
-                    'X-CSRFToken': csrfToken,
-                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,  // Ensure CSRF token is set in the request header
                 }
-            })
-            console.log('login response', response)
+            });
+            console.log('Login response:', response);
             return response.data;
         } catch (error) {
-            console.log('login error', error)
-            if (axios.isAxiosError(error)) {
-                setErrors(error.response?.data?.errors || []);
+            console.error('Login error:', error);
+            if (axios.isAxiosError(error) && error.response) {
+                // Assuming setErrors is a function that sets error messages in your component's state
+                setErrors(error.response.data.errors || ['Unknown error occurred']);
             } else {
                 console.error('Unexpected error:', error);
             }
         }
-    }
+    };
 
     const onLogin = (userData: userDataType) => {
         setUserData(userData)

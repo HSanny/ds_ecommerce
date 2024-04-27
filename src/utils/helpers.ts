@@ -52,39 +52,12 @@ export const sortUniqueCategoryByFirstNumber: (
     })
 }
 
-
-// Utility function to get the CSRF token from cookies
-
-export const getCsrfToken = () => {
-    const csrfToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        ?.split('=')[1];
-    return csrfToken;
+export const getCsrfToken = (): string | undefined => {
+    const cookies = document.cookie.split(';');
+    const csrfCookie = cookies.find(cookie => cookie.trim().startsWith('csrftoken='));
+    if (csrfCookie) {
+        return csrfCookie.split('=')[1];
+    }
+    return undefined;
 };
 
-// export const getCsrfToken = (): string | undefined => {
-//     const name = 'csrftoken'; // The default Django CSRF cookie name
-//     if (document.cookie && document.cookie !== '') {
-//         const cookies = document.cookie.split(';');
-//         for (let i = 0; i < cookies.length; i++) {
-//             const cookie = cookies[i].trim();
-//             if (cookie.substring(0, name.length + 1) === (name + '=')) {
-//                 return decodeURIComponent(cookie.substring(name.length + 1));
-//             }
-//         }
-//     }
-//     return undefined;
-// };
-
-// Setup Axios to include the CSRF token in the headers of every request
-axios.interceptors.request.use(config => {
-    const csrfToken = getCsrfToken();
-    if (csrfToken) {
-        config.headers['X-CSRFToken'] = csrfToken;
-    }
-    return config;
-}, error => Promise.reject(error));
-
-// Enable withCredentials globally if your API requires cookies to be sent
-axios.defaults.withCredentials = true;

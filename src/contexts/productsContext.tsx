@@ -22,6 +22,7 @@ import { SummaryType, initialSummary } from "../types/summaryType";
 import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
 import { getCsrfToken } from "../utils/helpers";
 import AlertNotification from "../components/common/AlertNotification";
+import axiosInstance from "../utils/axiosConfig";
 
 
 const initialProductsState: initialProductsStateType = {
@@ -81,25 +82,25 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const fetchSummary = async () => {
         dispatch({
             type: GET_PRODUCT_SUMMARY_BEGIN
-        })
+        });
         try {
-            const response = await axios.get<SummaryType>(SUMMARY_ENDPOINT, {
-                withCredentials: true, // include credentials for CORS and CSRF
-            });
+            // Using axiosInstance which already has withCredentials set to true globally
+            const response = await axiosInstance.get<SummaryType>(SUMMARY_ENDPOINT);
 
             if (response) {
                 dispatch({
                     type: GET_PRODUCT_SUMMARY_SUCCESS,
                     payload: response.data
-                })
+                });
             } else {
-                setSummary(initialSummary)
+                setSummary(initialSummary);
             }
-            return response.data
+            return response.data;
         } catch (error) {
+            console.error('Error fetching product summary:', error);
             dispatch({
                 type: GET_PRODUCT_SUMMARY_ERROR
-            })
+            });
         }
     };
 
@@ -119,43 +120,28 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     // Fetch all products
     const fetchAllProducts = async (filter: filterType, page: number = 1) => {
-        dispatch({ type: GET_PRODUCTS_BEGIN })
+        dispatch({ type: GET_PRODUCTS_BEGIN });
         try {
-            const payload = {
+            const csrfToken = getCsrfToken();
+            const response = await axiosInstance.post(DATA_ENDPOINT, {
                 filters: filter,
                 page: page,
-            }
-            // This is for get method
-            // const params = new URLSearchParams();
-            // // This will add each filter to the query parameters only if it has a value. 
-            // Object.keys(filters).forEach(key => {
-            //     // use type assertion
-            //     const value = filters[key as keyof filterType]
-            //     if (value != undefined) {
-            //         params.append(key, String(value));
-            //     }
-            // });
-
-            const csrfToken = getCsrfToken();
-            if (csrfToken) {
-                axios.defaults.headers.post['X-CSRFToken'] = csrfToken;
-            }
-            axios.defaults.withCredentials = true;
-            const response = await axios.post(DATA_ENDPOINT, JSON.stringify(payload), {
+            }, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,  // Add CSRF token here, directly in the request
                 }
-            })
+            });
+
             dispatch({
                 type: GET_PRODUCTS_SUCCESS,
                 payload: response.data
-            })
+            });
         } catch (error) {
-            dispatch({
-                type: GET_PRODUCTS_ERROR
-            })
+            console.error('Error fetching products:', error);
+            dispatch({ type: GET_PRODUCTS_ERROR });
         }
-    }
+    };
 
     React.useEffect(() => {
         fetchSummary()
