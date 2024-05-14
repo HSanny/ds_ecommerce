@@ -27,9 +27,12 @@ export type initialProductsStateType = {
     filters: filterType
     summary: SummaryType | {}
     featuredProducts: productDataType[] | []
-    singleProduct: productDataType | {}
+    singleProduct: productDataType | null
     openSidebar: () => void
     closeSidebar: () => void
+    singleProductId: string | null
+    setSingleProductId: (id: string) => void
+    resetSingleProductId: () => void
     fetchSingleProduct: (id: string) => void
     fetchAllProducts: (filters: filterType, pageNumber: number) => void
     updateFilter: (filters: filterType) => void

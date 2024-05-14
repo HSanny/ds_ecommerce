@@ -53,7 +53,7 @@ const SignUp = () => {
     // }
 
     const handleSubmit = () => {
-        console.log("register data:", registerData)
+        // console.log("register data:", registerData)
     }
 
     return (

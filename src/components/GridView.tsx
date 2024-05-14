@@ -21,7 +21,8 @@ const GridView = () => {
                             <div>
                                 <img src={product?.image} alt={product?.name} />
                                 <h5>{product?.name}</h5>
-                                <p>{product?.actual_price}</p>
+                                <p>price: {product?.actual_price}</p>
+                                <p>discount price: {product?.discount_price}</p>
                             </div>
                         </Link>
 

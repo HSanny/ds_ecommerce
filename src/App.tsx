@@ -23,16 +23,10 @@ function App() {
         {
           path: '/products',
           element: <ProductsPage />,
-          //     children: [
-          //       {
-          //         path: ':slug',
-          //         element: <SingleProduct />,
-          //       }
-          // ]
         },
         {
-          path: `/products/:slug`,
-          element: <SingleProduct />
+          path: '/products:id',
+          element: <SingleProduct />,
         },
         {
           path: `/shipment`,

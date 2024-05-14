@@ -17,7 +17,7 @@ const ListView = () => {
             <ListViewWrapper>
                 <div>
                     {products?.map(product => {
-                        const { id, image, name, actual_price } = product
+                        const { id, image, name, actual_price, discount_price } = product
                         return (
                             <article key={id}>
                                 <Link to={`/products/${id}`}>
@@ -26,8 +26,8 @@ const ListView = () => {
 
                                 <div>
                                     <h4>{name}</h4>
-                                    <h5>{formatPrice(parseInt(actual_price))}</h5>
-                                    <p>{name.substring(0, 150)}...</p>
+                                    <h5>price: {actual_price}</h5>
+                                    <h5>discount price: {discount_price}</h5>
                                     <Link to={`/products/${id}`} className="btn">
                                         Details
                                     </Link>

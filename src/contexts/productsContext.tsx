@@ -6,6 +6,8 @@ import {
     GET_PRODUCTS_BEGIN,
     GET_PRODUCTS_SUCCESS,
     GET_PRODUCTS_ERROR,
+    SET_SINGLE_PRODUCT_ID,
+    RESET_SINGLE_PRODUCT_ID,
     GET_SINGLE_PRODUCT_BEGIN,
     GET_SINGLE_PRODUCT_SUCCESS,
     GET_SINGLE_PRODUCT_ERROR,
@@ -19,7 +21,7 @@ import { initialProductsStateType, productDataType } from "../types/productType"
 import axios from "axios"
 import { filterType, initialFilterState } from "../types/filterTypes";
 import { SummaryType, initialSummary } from "../types/summaryType";
-import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
+import { ALL_PRODUCT_ENDPOINT, SINGLE_PRODUCT_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
 import { getCsrfToken } from "../utils/helpers";
 import AlertNotification from "../components/common/AlertNotification";
 import axiosInstance from "../utils/axiosConfig";
@@ -30,9 +32,10 @@ const initialProductsState: initialProductsStateType = {
     products: [],
     totalPage: 0,
     featuredProducts: [],
-    singleProduct: {},
+    singleProduct: null,
     openSidebar: () => { },
     closeSidebar: () => { },
+    singleProductId: null,
     fetchSingleProduct: () => { },
     fetchAllProducts: () => { },
     updateFilter: () => { },
@@ -48,6 +51,8 @@ const initialProductsState: initialProductsStateType = {
     summary: {},
     summaryLoading: false,
     summaryError: false,
+    setSingleProductId: () => {},
+    resetSingleProductId: () => {}
 }
 
 const ProductsContext = React.createContext<initialProductsStateType>(initialProductsState)
@@ -62,7 +67,6 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [filter, setFilter] = React.useState<filterType>(initialFilterState)
     const [currPage, setCurrPage] = React.useState(1)
     console.log('state:', state)
-    console.log('summary:', summary)
 
     const [errorOpen, setErrorOpen] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
@@ -123,7 +127,7 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: GET_PRODUCTS_BEGIN });
         try {
             const csrfToken = getCsrfToken();
-            const response = await axiosInstance.post(DATA_ENDPOINT, {
+            const response = await axiosInstance.post(ALL_PRODUCT_ENDPOINT, {
                 filters: filter,
                 page: page,
             }, {
@@ -151,30 +155,37 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         fetchAllProducts(state.filters, currPage)
     }, [currPage, state.filters])
 
-    const fetchSingleProduct = (name: string) => {
+    const setSingleProductId = (id: string) => {
+        dispatch({
+            type: SET_SINGLE_PRODUCT_ID,
+            payload: id
+        });
+    };
+
+    const resetSingleProductId = () => {
+        dispatch({
+            type: RESET_SINGLE_PRODUCT_ID
+        });
+    };
+
+    const fetchSingleProduct = React.useCallback(async (id: string) => {
         dispatch({
             type: GET_SINGLE_PRODUCT_BEGIN
         })
         try {
-            const singleProduct: productDataType = state.products.filter(
-                (product: productDataType) => product.name === name
-            )[0]
-
-            if (singleProduct) {
-                dispatch({
-                    type: GET_SINGLE_PRODUCT_SUCCESS,
-                    payload: singleProduct,
-                })
-            }
+            const response = await axios.get(`${SINGLE_PRODUCT_ENDPOINT}/${id}`)
+            const singleProduct: productDataType = response.data
+            dispatch({
+                type: GET_SINGLE_PRODUCT_SUCCESS,
+                payload: singleProduct,
+            })
         } catch (error: any) {
-            setErrorMessage(error)
+            console.error('Failed to fetch single product:', error)
             dispatch({
                 type: GET_SINGLE_PRODUCT_ERROR
             })
-            return <AlertNotification message={errorMessage} open={errorOpen} onClose={handleClose} severity="error" />
-
         }
-    }
+    }, [dispatch])
 
 
     return (
@@ -183,11 +194,13 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             fetchAllProducts,
             openSidebar,
             closeSidebar,
+            setSingleProductId,
+            resetSingleProductId,
             fetchSingleProduct,
             setFilter,
             clearFilter,
             setCurrPage,
-            updateFilter
+            updateFilter,
         }}>
             {children}
         </ProductsContext.Provider>

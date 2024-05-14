@@ -1,113 +1,47 @@
-import React from "react";
-import styled from "styled-components";
-import { Link, useParams } from "react-router-dom";
-import { productDataType } from "../types/productType";
-import { FaSearch } from "react-icons/fa";
-import { formatPrice } from "../utils/helpers";
-import { useProductsContext } from "../contexts/productsContext";
-import Loading from "./common/Loading";
-import Error from "./common/Error";
-import NotFound from "./common/NotFound";
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Card, CardMedia, CardContent, Typography, CircularProgress } from '@mui/material';
+import { useProductsContext } from '../contexts/productsContext';
 
-// const SingleProduct: React.FC<{ product: productDataType }> = ({ product }) => {
 const SingleProduct = () => {
-  
-  const { slug } = useParams()
-  const { fetchSingleProduct,singleProduct,singleProductLoading: loading,singleProductError: error } = useProductsContext()
+  const { id } = useParams<{ id: string }>();
+  console.log('rendering single product, id: ',id)
+  const {
+    singleProduct, singleProductLoading, singleProductError,
+    singleProductId, setSingleProductId, fetchSingleProduct
+  } = useProductsContext()
 
-  // fetch product when component mounts or slug changes
   React.useEffect(() => {
-    // ensure slug is defined before calling fecthSingleProduct
-    if (typeof slug === "string") {
-      fetchSingleProduct(slug)
+    if (id && id !== singleProductId) {
+      setSingleProductId(id);
     }
-  }, [slug, fetchSingleProduct])
+  }, [id, singleProductId, setSingleProductId])
 
-  if (loading) return <Loading />
-  if (error) return <Error />
-  if (!singleProduct) return <NotFound />
+  React.useEffect(() => {
+    if (singleProductId) {
+      fetchSingleProduct(singleProductId)
+    }
+  }, [singleProductId]);
 
-  const { image, name, actual_price } = singleProduct as productDataType
-
-  // Check if images array is available and has elements
-  // const image = image && image.length > 0 ? image[0] : 'defaultImageURL';
-
-
-
+  if (singleProductLoading) return <CircularProgress />;
+  if (singleProductError) return <Typography variant="body2" color="error">Failed to load product.</Typography>;
+  if (!singleProduct) return <Typography variant="body2">Product not found.</Typography>;
 
   return (
-    <ProductWrapper>
-      <div className="container">
-        <Link to={`/products/${slug}`}>
-          <img src={image} alt={name} />
-          <div className="link">
-            <FaSearch />
-          </div>
-        </Link>
-      </div>
-      <footer>
-        <h5>{name}</h5>
-        <p>{actual_price}</p>
-      </footer>
-    </ProductWrapper>
-  )
-}
+    <Card>
+      <CardMedia
+        component="img"
+        height="250"
+        image={singleProduct?.image || '/static/images/default.png'}
+        alt={singleProduct?.name}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5">{singleProduct.name}</Typography>
+        <Typography variant="body2" color="text.secondary">Price: {singleProduct.actual_price}</Typography>
+        <Typography variant="body2" color="text.secondary">Discount Price: {singleProduct.discount_price}</Typography>
+      </CardContent>
+    </Card>
+  );
+};
 
-const ProductWrapper = styled.article`
- .container {
-    position: relative;
-    background: var(--clr-black);
-    border-radius: var(--radius);
-  }
-  img {
-    width: 100%;
-    display: block;
-    object-fit: cover;
-    border-radius: var(--radius);
-    transition: var(--transition);
-  }
-  .link {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--clr-primary-5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    opacity: 0;
-    cursor: pointer;
-    svg {
-      font-size: 1.25rem;
-      color: var(--clr-white);
-    }
-  }
-  .container:hover img {
-    opacity: 0.5;
-  }
-  .container:hover .link {
-    opacity: 1;
-  }
-  footer {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  footer h5,
-  footer p {
-    margin-bottom: 0;
-    font-weight: 400;
-  }
-
-  footer p {
-    color: var(--clr-primary-5);
-    letter-spacing: var(--spacing);
-  }
-`
-
-export default SingleProduct
+export default SingleProduct;

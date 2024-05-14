@@ -12,10 +12,13 @@ import {
     GET_PRODUCT_SUMMARY_SUCCESS,
     UPDATE_FILTER,
     CLEAR_FILTER,
+    SET_SINGLE_PRODUCT_ID,
+    RESET_SINGLE_PRODUCT_ID,
 } from "../actions/productActions";
 import { initialProductsStateType } from "../types/productType";
 
 const productsReducer = (state: initialProductsStateType, action: any) => {
+    console.log('action:', action)
     if (action.type === SIDEBAR_OPEN) {
         return { ...state, isSidebarOpen: true }
     }
@@ -34,7 +37,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
         const products = action.payload.products.map((product: any) => {
             // const allProducts = action.payload.map((product: any) => {
             let {
-                _id,
+                id,
                 name,
                 main_category,
                 sub_category,
@@ -47,7 +50,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
             } = product
 
             return {
-                id: _id,
+                id: id,
                 name,
                 main_category,
                 sub_category,
@@ -66,6 +69,14 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
 
     if (action.type === GET_PRODUCTS_ERROR) {
         return { ...state, productsError: true, productsLoading: false }
+    }
+
+    if (action.type === SET_SINGLE_PRODUCT_ID) {
+        return { ...state, singleProductId: action.payload}
+    }
+
+    if (action.type === RESET_SINGLE_PRODUCT_ID) {
+        return { ...state, singleProductId: null }
     }
 
     if (action.type === GET_SINGLE_PRODUCT_BEGIN) {

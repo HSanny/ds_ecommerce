@@ -11,14 +11,6 @@ const ProductsPage: React.FC = () => {
   const { isClickFromServices, resetIsClickFromService } = useFilterContext();
   const { clearFilter } = useProductsContext();
 
-  // useEffect(() => {
-  //   if (isClickFromServices) {
-  //     resetIsClickFromService();
-  //   } else {
-  //     clearFilter();
-  //   }
-  // }, [isClickFromServices, resetIsClickFromService, clearFilter]);
-
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -35,7 +27,7 @@ const ProductsPage: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      <Outlet /> {/* this is where child routes will be rendered */}
+      <Outlet /> this is where child routes will be rendered
     </Box>
   );
 };

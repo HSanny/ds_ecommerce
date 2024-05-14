@@ -25,10 +25,10 @@ const Filter = () => {
       setRatingRange(rate);
     };
 
-  // ... similar handlers for other filters
-    console.log("search term: ", searchTerm)
-    console.log("selectedCategory:", selectedCategory)
-    console.log("rate: ", ratingRange)
+  // // ... similar handlers for other filters
+  //   console.log("search term: ", searchTerm)
+  //   console.log("selectedCategory:", selectedCategory)
+  //   console.log("rate: ", ratingRange)
     
   React.useEffect(() => {
     updateFilter({
