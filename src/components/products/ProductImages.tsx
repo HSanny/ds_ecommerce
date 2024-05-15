@@ -1,5 +1,5 @@
 import React from "react";
-import ImageWrapper from "./common/ImageWrapper";
+import ImageWrapper from "../common/ImageWrapper";
 
 const ProductsImages: React.FC<{ images: string[] }> = ({
     images

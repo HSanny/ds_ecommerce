@@ -1,5 +1,5 @@
 import WelcomeBanner from "../components/WelcomeBanner";
-import FeaturedProduct from "../components/FeaturedProduct";
+import FeaturedProduct from "../components/products/FeaturedProduct";
 import Services from "../components/Services";
 import Contact from "../components/Contact";
 

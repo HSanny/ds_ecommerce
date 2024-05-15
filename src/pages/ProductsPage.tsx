@@ -3,7 +3,7 @@ import { Box, Grid, useTheme, useMediaQuery } from "@mui/material";
 import Filter from "../components/Filter/Filter";
 import { useFilterContext } from "../contexts/filterContext";
 import Sorting from "../components/Sorting";
-import ProductList from "../components/ProductList";
+import ProductList from "../components/products/ProductList";
 import { Outlet } from "react-router-dom";
 import { useProductsContext } from "../contexts/productsContext";
 
@@ -27,7 +27,7 @@ const ProductsPage: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      <Outlet /> this is where child routes will be rendered
+      {/* <Outlet /> this is where child routes will be rendered */}
     </Box>
   );
 };

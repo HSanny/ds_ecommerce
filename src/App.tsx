@@ -5,7 +5,7 @@ import ScrollPage from './components/common/ScrollPage';
 import NaviBar from './components/NaviBar';
 import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
-import SingleProduct from './components/SingleProduct';
+import SingleProduct from './components/products/SingleProduct';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
 
@@ -25,7 +25,7 @@ function App() {
           element: <ProductsPage />,
         },
         {
-          path: '/products:id',
+          path: '/products/:id',
           element: <SingleProduct />,
         },
         {
@@ -40,11 +40,6 @@ function App() {
           path: '/authentication/sign-up',
           element: <SignUp />
         },
-        // {
-        //   index: true,
-        //   path: '/products/',
-        //   element: <SingleProduct />
-        // }
         // {
         //   index: true,
         //   path: '/shipment',

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Typography, Button, Grid, Card, CardMedia, CardContent, useTheme, useMediaQuery } from "@mui/material";
-import { useProductsContext } from "../contexts/productsContext";
+import { useProductsContext } from "../../contexts/productsContext";
 
 const FeaturedProduct = () => {
   const theme = useTheme();
