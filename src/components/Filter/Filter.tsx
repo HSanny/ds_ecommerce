@@ -1,173 +1,100 @@
-import React from "react";
-import styled from "styled-components";
-import { useProductsContext } from "../../contexts/productsContext";
-import SearchFilter from "./SearchFilter";
-import CategoryFilter from "./CategoryFilters";
-import PriceRangeFilter from "./RatingRangeFilter";
+import React, { useState } from 'react';
+import {
+  Box, TextField, Select, MenuItem, FormControl, InputLabel, Button, Typography, Slider, Grid, SelectChangeEvent
+} from '@mui/material';
+import { filterType } from '../../types/filterTypes';
+import { useProductsContext } from '../../contexts/productsContext';
 
-const Filter = () => {
-    const { filters, updateFilter, clearFilter, summary } = useProductsContext();
+const Filter: React.FC = () => {
+  const { fetchAllProducts, summary, updateFilter, setCurrPage } = useProductsContext();
 
-    const [searchTerm, setSearchTerm] = React.useState('');
-    const [selectedCategory, setSelectedCategory] = React.useState({ main: '', sub: '' });
-    const [ratingRange, setRatingRange] = React.useState<number[]>([filters.ratings_gte, filters.ratings_lte]); // example range
-    // ... other filter states
+  const [localFilters, setLocalFilters] = useState<filterType>({
+    search: '',
+    main_category: '',
+    sub_category: '',
+    ratings_gte: 0,
+    ratings_lte: 5,
+  });
 
-    const handleSearchChange = (term: any) => {
-      setSearchTerm(term);
-    };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalFilters({
+      ...localFilters,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    const handleCategoryChange = (mainCategory: string, subCategory: string) => {
-      setSelectedCategory({ main: mainCategory, sub: subCategory });
-    };
+  const handleSelectChange = (e: SelectChangeEvent<string>) => {
+    setLocalFilters({
+      ...localFilters,
+      [e.target.name as string]: e.target.value,
+    });
+  };
 
-    const handleRatingChange = (rate:any) => {
-      setRatingRange(rate);
-    };
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    const [ratings_gte, ratings_lte] = newValue as number[];
+    setLocalFilters({
+      ...localFilters,
+      ratings_gte,
+      ratings_lte,
+    });
+  };
 
-  // // ... similar handlers for other filters
-  //   console.log("search term: ", searchTerm)
-  //   console.log("selectedCategory:", selectedCategory)
-  //   console.log("rate: ", ratingRange)
-    
-  React.useEffect(() => {
-    updateFilter({
-      ...filters,
-      search: searchTerm,
-      main_category: selectedCategory.main,
-      sub_category: selectedCategory.sub,
-      ratings_gte: ratingRange[0],
-      ratings_lte: ratingRange[1]
-    })
-  }, [searchTerm, selectedCategory, ratingRange])
-    return (
-        <Wrapper>
-        {/* <FilterButton
-          filter={filter}
-          setFilter={setFilter}
-        /> */}
+  const handleApplyFilters = () => {
+    updateFilter(localFilters);
+    setCurrPage(1);
+    fetchAllProducts(localFilters, 1);
+  };
 
-        
-        <div className={filters ? 'show-filters content' : 'content'}>
-
-          <SearchFilter value={searchTerm} onChange={handleSearchChange} />
-          <CategoryFilter value={selectedCategory} onChange={handleCategoryChange} />
-          <PriceRangeFilter value={ratingRange} onChange={handleRatingChange} />
-          {/* Clear Filters */}
-          <button type="button" className="clear-btn" onClick={() => clearFilter()}>
-            Clear Filter
-          </button>
-        </div>
-
-        </Wrapper>
-    )
-}
-
-const Wrapper = styled.section`
-
-  .content {
-    display: none;
-  }
-  .show-filters {
-    display: block;
-  }
-  .form-control {
-    margin-bottom: 1.25rem;
-    h5 {
-      margin-bottom: 0.5rem;
-    }
-  }
-  .search-input {
-    padding: 0.5rem;
-    background: var(--clr-grey-10);
-    border-radius: var(--radius);
-    border-color: transparent;
-    letter-spacing: var(--spacing);
-  }
-  .search-input::placeholder {
-    text-transform: capitalize;
-  }
-
-  button {
-    display: block;
-    margin: 0.25em 0;
-    padding: 0.25rem 0;
-    text-transform: capitalize;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid transparent;
-    letter-spacing: var(--spacing);
-    color: var(--clr-grey-5);
-    cursor: pointer;
-  }
-  .active {
-    border-color: var(--clr-grey-5);
-  }
-  .company {
-    background: var(--clr-grey-10);
-    border-radius: var(--radius);
-    border-color: transparent;
-    padding: 0.25rem;
-    text-transform: capitalize;
-  }
-  .colors {
-    display: flex;
-    align-items: center;
-  }
-  .color-btn {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    background: #222;
-    margin-right: 0.5rem;
-    border: none;
-    cursor: pointer;
-    opacity: 0.5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    svg {
-      font-size: 0.5rem;
-      color: var(--clr-white);
-    }
-  }
-  .all-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0.5rem;
-    opacity: 0.5;
-  }
-  .active {
-    opacity: 1;
-  }
-  .all-btn .active {
-    text-decoration: underline;
-  }
-  .price {
-    margin-bottom: 0.25rem;
-  }
-  .checkbox {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: center;
-    column-gap: 0.5rem;
-    font-size: 1rem;
-  }
-  .clear-btn {
-    background: var(--clr-red-dark);
-    color: var(--clr-white);
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--radius);
-  }
-  @media (min-width: 768px) {
-    .content {
-      display: block;
-      position: sticky;
-      top: 1rem;
-    }
-  }
-`
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h6" gutterBottom>Filter Products</Typography>
+      <FormControl fullWidth margin="normal">
+        <TextField
+          label="Search"
+          name="search"
+          value={localFilters.search}
+          onChange={handleInputChange}
+        />
+      </FormControl>
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Main Category</InputLabel>
+        <Select
+          name="main_category"
+          value={localFilters.main_category}
+          onChange={handleSelectChange}
+        >
+          <MenuItem value=""><em>None</em></MenuItem>
+          {summary.main_categories.map((category) => (
+            <MenuItem key={category} value={category}>{category}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Sub Category</InputLabel>
+        <Select
+          name="sub_category"
+          value={localFilters.sub_category}
+          onChange={handleSelectChange}
+        >
+          <MenuItem value=""><em>None</em></MenuItem>
+          {summary.sub_categories.map((subcategory) => (
+            <MenuItem key={subcategory} value={subcategory}>{subcategory}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <Typography gutterBottom>Ratings Range</Typography>
+      <Slider
+        value={[localFilters.ratings_gte, localFilters.ratings_lte]}
+        onChange={handleSliderChange}
+        valueLabelDisplay="auto"
+        min={0}
+        max={5}
+      />
+      <Button variant="contained" color="primary" fullWidth onClick={handleApplyFilters} sx={{ mt: 2 }}>
+        Apply Filters
+      </Button>
+    </Box>
+  );
+};
 
 export default Filter;

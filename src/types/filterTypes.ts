@@ -1,9 +1,6 @@
 import { productDataType } from "./productType"
 
 export type filterType = {
-    // is an index signature. It tells TypeScript that filterType
-    // can be indexed with a string,
-    // and the value of that index can be a string, number, or undefined.
     search: string,
     main_category: string,
     sub_category: string,

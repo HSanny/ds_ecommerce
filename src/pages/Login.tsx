@@ -11,11 +11,15 @@ const Login = () => {
     const navigate = useNavigate() // for redirecting after login
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const userData = await login(email, password);
-        if (userData) {
-            onLogin(userData)
-            navigate('/products')
+        event.preventDefault();
+        try {
+            const userData = await login(email, password);
+            if (userData) {
+                onLogin(userData);
+                navigate('/products');
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
         }
     }
 

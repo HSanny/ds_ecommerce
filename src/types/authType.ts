@@ -34,10 +34,16 @@ export type RegisterDataType = {
 };
 
 export const initialRegisterType:RegisterDataType = {
-    email: "",
-    password: "",
-    username: "",
-    paymentMethod: { type: '' },
+    email: '',
+    username: '',
+    password: '',
+    paymentMethod: {
+        type: '',
+        cardNumber: '',
+        expiryDate: '',
+        cvv: '',
+        cardholderName: '',
+    },
 }
 
 export type PaymentMethodType = {

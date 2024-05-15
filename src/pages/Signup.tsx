@@ -29,7 +29,7 @@ const SignUp = () => {
     }
 
 
-    const handlePaymentTypeChange = (event: SelectChangeEvent<'Credit Card' | 'Debit Card' | 'PayPal' | ''>) => {
+    const handlePaymentTypeChange = (event: SelectChangeEvent<string>) => {
         const type = event.target.value as 'Credit Card' | 'Debit Card' | 'PayPal' | ''
         setRegisterData({
             ...registerData,
@@ -43,18 +43,18 @@ const SignUp = () => {
         })
     }
 
-
-    // const handleSubmit = async () => {
-    //     const userData = await register(registerData);
-    //     if (userData) {
-    //         onLogin(userData)
-    //         navigate('/products')
-    //     }
-    // }
-
-    const handleSubmit = () => {
-        // console.log("register data:", registerData)
-    }
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            const userData = await register(registerData);
+            if (userData) {
+                onLogin(userData);
+                navigate('/products');
+            }
+        } catch (error) {
+            console.error('Registration failed:', error);
+        }
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -231,7 +231,7 @@ const SignUp = () => {
                         Already have an account ?
                     </Typography>
                     <Button
-                        type="submit"
+                        type="button"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}

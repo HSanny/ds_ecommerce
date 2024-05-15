@@ -22,8 +22,6 @@ import axios from "axios"
 import { filterType, initialFilterState } from "../types/filterTypes";
 import { SummaryType, initialSummary } from "../types/summaryType";
 import { ALL_PRODUCT_ENDPOINT, SINGLE_PRODUCT_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
-import { getCsrfToken } from "../utils/helpers";
-import AlertNotification from "../components/common/AlertNotification";
 import axiosInstance from "../utils/axiosConfig";
 
 
@@ -48,7 +46,7 @@ const initialProductsState: initialProductsStateType = {
     singleProductError: false,
     currPage: 0,
     filters: initialFilterState,
-    summary: {},
+    summary: initialSummary,
     summaryLoading: false,
     summaryError: false,
     setSingleProductId: () => {},
@@ -64,7 +62,6 @@ export const useProductsContext = () => {
 export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = React.useReducer(productsReducer, initialProductsState);
     const [summary, setSummary] = React.useState<SummaryType>(initialSummary)
-    const [filter, setFilter] = React.useState<filterType>(initialFilterState)
     const [currPage, setCurrPage] = React.useState(1)
     console.log('state:', state)
 
@@ -109,10 +106,9 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     };
 
     const updateFilter = (filters: filterType) => {
-        setFilter(filters);
         dispatch({
             type: UPDATE_FILTER,
-            payload: filter
+            payload: filters
         })
     }
 
@@ -126,15 +122,9 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const fetchAllProducts = async (filter: filterType, page: number = 1) => {
         dispatch({ type: GET_PRODUCTS_BEGIN });
         try {
-            const csrfToken = getCsrfToken();
             const response = await axiosInstance.post(ALL_PRODUCT_ENDPOINT, {
                 filters: filter,
                 page: page,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,  // Add CSRF token here, directly in the request
-                }
             });
 
             dispatch({
@@ -197,7 +187,6 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             setSingleProductId,
             resetSingleProductId,
             fetchSingleProduct,
-            setFilter,
             clearFilter,
             setCurrPage,
             updateFilter,

@@ -25,7 +25,7 @@ export type initialProductsStateType = {
     totalPage: number
     currPage: number
     filters: filterType
-    summary: SummaryType | {}
+    summary: SummaryType
     featuredProducts: productDataType[] | []
     singleProduct: productDataType | null
     openSidebar: () => void

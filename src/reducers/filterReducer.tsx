@@ -119,10 +119,6 @@ const filterReducer = (
                 return product?.sub_category === sub_category
             })
         }
-        // price
-        // temp = temp.filter(product => {
-        //     return parseInt(product.actual_price) <= price
-        // })
 
         return { ...state, filteredProducts: temp }
 

@@ -51,13 +51,3 @@ export const sortUniqueCategoryByFirstNumber: (
         return Number(a.match(/\d+/)![0]) - Number(b.match(/\d+/)![0])
     })
 }
-
-export const getCsrfToken = (): string | undefined => {
-    const cookies = document.cookie.split(';');
-    const csrfCookie = cookies.find(cookie => cookie.trim().startsWith('csrftoken='));
-    if (csrfCookie) {
-        return csrfCookie.split('=')[1];
-    }
-    return undefined;
-};
-
