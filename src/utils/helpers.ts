@@ -2,6 +2,7 @@ import axios from "axios";
 import { productDataType, productDataTypeKey } from "../types/productType";
 import { error } from "console";
 import { SummaryType } from "../types/summaryType";
+import React from "react";
 
 export const isValidSummary = (summary: any): summary is SummaryType => {
     // Check if summary is an object

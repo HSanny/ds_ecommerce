@@ -1,3 +1,4 @@
+// utils/axiosConfig.ts
 import axios from "axios";
 
 const axiosInstance = axios.create({
@@ -5,38 +6,17 @@ const axiosInstance = axios.create({
     withCredentials: true, // This ensures cookies are sent with requests
 });
 
-// Function to get CSRF token from cookie
-const getCSRFToken = () => {
-    const name = 'csrftoken';
-    const cookies = document.cookie.split(';');
-    console.log('document.cookie ', document)
-    for (let cookie of cookies) {
-        while (cookie.charAt(0) === ' ') cookie = cookie.substring(1);
-        if (cookie.indexOf(name + '=') === 0) return cookie.substring(name.length + 1);
-    }
-    return '';
+// Function to get access token from localStorage
+const getAccessToken = () => {
+    return localStorage.getItem('access_token');
 };
 
-// Function to set CSRF token
-const setCSRFToken = async () => {
-    try {
-        await axiosInstance.get('/auth/csrf-token/');
-        console.log('CSRF Token set.');
-    } catch (error) {
-        console.error('Error setting CSRF token:', error);
-    }
-};
-
-// Set CSRF token on initial load
-setCSRFToken();
-
-// Add CSRF token to request headers
+// Add JWT token to request headers
 axiosInstance.interceptors.request.use(
     (config) => {
-        const csrfToken = getCSRFToken();
-        console.log('CSRF Token: ', csrfToken)
-        if (csrfToken) {
-            config.headers['X-CSRFToken'] = csrfToken;
+        const token = getAccessToken();
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config;
     },
@@ -46,4 +26,3 @@ axiosInstance.interceptors.request.use(
 );
 
 export default axiosInstance;
-

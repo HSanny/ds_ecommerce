@@ -31,9 +31,10 @@ export type RegisterDataType = {
     phoneNumber?: number,
     billingAddress?: string,
     shippingAddress?: string,
-};
+    defaultShippingMethod?: string,
+}
 
-export const initialRegisterType:RegisterDataType = {
+export const initialRegisterType: RegisterDataType = {
     email: '',
     username: '',
     password: '',
@@ -47,7 +48,7 @@ export const initialRegisterType:RegisterDataType = {
 }
 
 export type PaymentMethodType = {
-    type: 'Credit Card' | 'Debit Card' | 'PayPal' | '' ,
+    type: 'Credit Card' | 'Debit Card' | 'PayPal' | '',
     cardNumber?: string,
     expiryDate?: string,
     cvv?: string,

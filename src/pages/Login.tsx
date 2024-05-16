@@ -6,22 +6,19 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
-    const { login, onLogin } = useAuthContext();
+    const { login } = useAuthContext();
 
     const navigate = useNavigate() // for redirecting after login
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            const userData = await login(email, password);
-            if (userData) {
-                onLogin(userData);
-                navigate('/products');
-            }
+            await login(email, password);
+            navigate('/products');
         } catch (error) {
             console.error('Login failed:', error);
         }
-    }
+    };
 
     return (
         <Container component="main" maxWidth="xs">

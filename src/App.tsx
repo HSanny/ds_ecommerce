@@ -8,6 +8,7 @@ import ProductsPage from './pages/ProductsPage';
 import SingleProduct from './components/products/SingleProduct';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
+import PrivateRoute from './utils/PrivateRoute';
 
 function App() {
   const AppRoutes = createBrowserRouter([
@@ -40,31 +41,24 @@ function App() {
           path: '/authentication/sign-up',
           element: <SignUp />
         },
-        // {
-        //   index: true,
-        //   path: '/shipment',
-        //   element: <ShipmentPage />
-        // },
-        // {
-        //   index: true,
-        //   path: '/cart',
-        //   element: <CartPage />
-        // }
+        {
+          element: <PrivateRoute />, // protect the following routes
+          children: [
+            {
+              path: '/shipment',
+              element: <div> Shipment Page </div>
+            },
+            {
+              path: '/cart',
+              element: <div> Cart Page </div>
+            }
+          ]
+        }
       ]
     },
   ])
   return (
     <RouterProvider router={AppRoutes} />
-    // <BrowserRouter>
-    //   <Routes>
-    //     {routes.map((route) => (
-    //       <Route
-    //         path={route.path}
-    //         element={route.component}
-    //       />
-    //     ))}
-    //   </Routes>
-    // </BrowserRouter>
   );
 }
 

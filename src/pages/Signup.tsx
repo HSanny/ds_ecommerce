@@ -1,13 +1,28 @@
-import React from "react";
+import React, { ReactNode, forwardRef } from "react";
 import { TextField, Button, Container, Box, Paper, Typography, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useAuthContext } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
-import { PaymentMethodType, RegisterDataType, initialRegisterType, userDataType } from "../types/authType";
-import { relative } from "path";
+import { PaymentMethodType, RegisterDataType, initialRegisterType } from "../types/authType";
+import { InputMask, type InputMaskProps } from "@react-input/mask";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+
+// Component with InputMask
+const CardNumberInputMask = forwardRef<HTMLInputElement, InputMaskProps>((props, forwardedRef) => {
+    return <InputMask ref={forwardedRef} mask="____ - ____ - ____ - ____" replacement="_" {...props} />;
+});
+
+const ExpiryDateInputMask = forwardRef<HTMLInputElement, InputMaskProps>((props, forwardedRef) => {
+    return <InputMask ref={forwardedRef} mask="__ / __" replacement="_" {...props} />;
+});
+
+const CVVInputMask = forwardRef<HTMLInputElement, InputMaskProps>((props, forwardedRef) => {
+    return <InputMask ref={forwardedRef} mask="___" replacement="_" {...props} />;
+});
 
 const SignUp = () => {
     const [registerData, setRegisterData] = React.useState<RegisterDataType>(initialRegisterType)
-    const { register, onLogin } = useAuthContext();
+    const { register } = useAuthContext();
 
     const navigate = useNavigate() // for redirecting after login
 
@@ -16,23 +31,23 @@ const SignUp = () => {
         subprop?: keyof PaymentMethodType
     ) => (event: React.ChangeEvent<HTMLInputElement>) => {
         if (subprop && registerData.paymentMethod.type) {
-            setRegisterData({
-                ...registerData,
-                paymentMethod: { ...registerData.paymentMethod, [subprop]: event.target.value }
-            });
+            setRegisterData((prevData) => ({
+                ...prevData,
+                paymentMethod: { ...prevData.paymentMethod, [subprop]: event.target.value }
+            }))
         } else {
-            setRegisterData({
-                ...registerData,
+            setRegisterData((prevData) => ({
+                ...prevData,
                 [prop]: event.target.value
-            })
+            }))
         }
     }
 
 
     const handlePaymentTypeChange = (event: SelectChangeEvent<string>) => {
         const type = event.target.value as 'Credit Card' | 'Debit Card' | 'PayPal' | ''
-        setRegisterData({
-            ...registerData,
+        setRegisterData((prevData) => ({
+            ...prevData,
             paymentMethod: {
                 type: type,
                 cardNumber: '',
@@ -40,17 +55,14 @@ const SignUp = () => {
                 cvv: '',
                 cardholderName: ''
             }
-        })
+        }))
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            const userData = await register(registerData);
-            if (userData) {
-                onLogin(userData);
-                navigate('/products');
-            }
+            await register(registerData);
+            navigate('/products');
         } catch (error) {
             console.error('Registration failed:', error);
         }
@@ -104,6 +116,13 @@ const SignUp = () => {
                         onChange={handleChange('password')}
                     />
 
+                    <PhoneInput
+                        country={'us'}
+                        onChange={e => handleChange('phoneNumber')}
+                        containerStyle={{ margin: '16px 0' }}
+                        inputStyle={{ width: '100%' }}
+                    />
+
                     <FormControl
                         fullWidth
                         sx={{
@@ -126,6 +145,9 @@ const SignUp = () => {
                     {['Credit Card', 'Debit Card'].includes(registerData.paymentMethod.type) && (
                         <>
                             <TextField
+                                InputProps={{
+                                    inputComponent: CardNumberInputMask
+                                }}
                                 margin="normal"
                                 required
                                 fullWidth
@@ -134,9 +156,12 @@ const SignUp = () => {
                                 type="text"
                                 id="cardNumber"
                                 value={registerData.paymentMethod.cardNumber || ''}
-                                onChange={(e) => handleChange('paymentMethod', 'cardNumber')}
+                                onChange={handleChange('paymentMethod', 'cardNumber')}
                             />
                             <TextField
+                                InputProps={{
+                                    inputComponent: ExpiryDateInputMask
+                                }}
                                 margin="normal"
                                 required
                                 fullWidth
@@ -145,9 +170,13 @@ const SignUp = () => {
                                 type="text"
                                 id="expiryDate"
                                 value={registerData.paymentMethod.expiryDate || ''}
-                                onChange={(e) => handleChange('paymentMethod', 'expiryDate')}
+                                onChange={handleChange('paymentMethod', 'expiryDate')}
                             />
+
                             <TextField
+                                InputProps={{
+                                    inputComponent: CVVInputMask
+                                }}
                                 margin="normal"
                                 required
                                 fullWidth
@@ -156,7 +185,7 @@ const SignUp = () => {
                                 type="text"
                                 id="cvv"
                                 value={registerData.paymentMethod.cvv || ''}
-                                onChange={(e) => handleChange('paymentMethod', 'cvv')}
+                                onChange={handleChange('paymentMethod', 'cvv')}
                             />
                             <TextField
                                 margin="normal"
@@ -167,7 +196,7 @@ const SignUp = () => {
                                 type="text"
                                 id="cardholderName"
                                 value={registerData.paymentMethod.cardholderName || ''}
-                                onChange={(e) => handleChange('paymentMethod', 'cardholderName')}
+                                onChange={handleChange('paymentMethod', 'cardholderName')}
                             />
                         </>
                     )}
@@ -182,7 +211,7 @@ const SignUp = () => {
                                 type="email"
                                 id="paypalEmail"
                                 value={registerData.paymentMethod.cardholderName || ''}  // Assuming using cardholderName to store PayPal email
-                                onChange={(e) => handleChange('paymentMethod', 'cardholderName')}
+                                onChange={handleChange('paymentMethod', 'cardholderName')}
                             />
                         </>
                     )}
@@ -210,6 +239,24 @@ const SignUp = () => {
                         onChange={handleChange('shippingAddress')}
                     />
 
+                    <FormControl
+                        fullWidth
+                        sx={{
+                            mt: 2
+                        }}
+                    >
+                        <InputLabel> Default Shipping Method </InputLabel>
+                        <Select
+                            labelId="default-shipping-method-label"
+                            value={registerData.defaultShippingMethod || ''}
+                            label="Default Shipping Method"
+                            onChange={(e) => handleChange('defaultShippingMethod')}
+                        >
+                            <MenuItem value={'Standard'}>Standard</MenuItem>
+                            <MenuItem value={'Express'}>Express</MenuItem>
+                            <MenuItem value={'Next-Day'}>Next-Day</MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <Button
                         type="submit"
