@@ -163,7 +163,7 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             type: GET_SINGLE_PRODUCT_BEGIN
         })
         try {
-            const response = await axios.get(`${SINGLE_PRODUCT_ENDPOINT}/${id}`)
+            const response = await axios.get(`${SINGLE_PRODUCT_ENDPOINT}${id}/`);
             const singleProduct: productDataType = response.data
             dispatch({
                 type: GET_SINGLE_PRODUCT_SUCCESS,

@@ -28,10 +28,10 @@ const SingleProduct = () => {
     if (singleProductId) {
       fetchSingleProduct(singleProductId)
     }
-  }, [singleProductId]);
+  }, [singleProductId, fetchSingleProduct]);
 
   React.useEffect(() => {
-    if (!singleProduct && !singleProductError && !singleProductLoading) {
+    if (!singleProduct && singleProductError && !singleProductLoading) {
       setOpenDialog(true)
     }
   }, [singleProduct, singleProductLoading, singleProductError])
