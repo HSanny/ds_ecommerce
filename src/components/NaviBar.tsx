@@ -25,12 +25,6 @@ const NaviBar = () => {
                 </div>
                 <NaviLinks className="nav-links" />
             </div>
-            {user.isLogin ? (
-                <CartButtons />
-            ) : (
-                <LoginButton />
-            )
-            }
         </NavWrapper>
     )
 }

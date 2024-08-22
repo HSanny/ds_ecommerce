@@ -10,7 +10,7 @@ const Filter: React.FC = () => {
 
   const [localFilters, setLocalFilters] = useState<filterType>({
     search: '',
-    main_category: '',
+    category: '',
     sub_category: '',
     ratings_gte: 0,
     ratings_lte: 5,
@@ -59,17 +59,17 @@ const Filter: React.FC = () => {
       <FormControl fullWidth margin="normal">
         <InputLabel>Main Category</InputLabel>
         <Select
-          name="main_category"
-          value={localFilters.main_category}
+          name="category"
+          value={localFilters.category}
           onChange={handleSelectChange}
         >
           <MenuItem value=""><em>None</em></MenuItem>
-          {summary.main_categories.map((category) => (
+          {summary.categories.map((category) => (
             <MenuItem key={category} value={category}>{category}</MenuItem>
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth margin="normal">
+      {/* <FormControl fullWidth margin="normal">
         <InputLabel>Sub Category</InputLabel>
         <Select
           name="sub_category"
@@ -81,7 +81,7 @@ const Filter: React.FC = () => {
             <MenuItem key={subcategory} value={subcategory}>{subcategory}</MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
       <Typography gutterBottom>Ratings Range</Typography>
       <Slider
         value={[localFilters.ratings_gte, localFilters.ratings_lte]}

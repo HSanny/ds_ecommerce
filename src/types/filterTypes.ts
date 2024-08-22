@@ -2,7 +2,7 @@ import { productDataType } from "./productType"
 
 export type filterType = {
     search: string,
-    main_category: string,
+    category: string,
     sub_category: string,
     ratings_gte: number,
     ratings_lte: number,
@@ -26,7 +26,7 @@ export type initialStateType = {
 
 export const initialFilterState: filterType = {
     search: '',
-    main_category: '',
+    category: '',
     sub_category: '',
     ratings_gte: 0,
     ratings_lte: 10,

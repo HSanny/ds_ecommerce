@@ -37,29 +37,29 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
         const products = action.payload.products.map((product: any) => {
             // const allProducts = action.payload.map((product: any) => {
             let {
-                id,
-                name,
-                main_category,
-                sub_category,
+                product_id,
+                product_name,
+                about_product,
                 actual_price,
-                discount_price,
-                image,
-                link,
-                ratings,
-                no_of_ratings,
+                category,
+                discounted_price,
+                discount_percentage,
+                img_link,
+                rating,
+                rating_count,
             } = product
 
             return {
-                id: id,
-                name,
-                main_category,
-                sub_category,
+                product_id,
+                product_name,
+                about_product,
                 actual_price,
-                discount_price,
-                image,
-                link,
-                ratings,
-                no_of_ratings,
+                category,
+                discounted_price,
+                discount_percentage,
+                img_link,
+                rating,
+                rating_count,
             }
         })
 
@@ -72,7 +72,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
     }
 
     if (action.type === SET_SINGLE_PRODUCT_ID) {
-        return { ...state, singleProductId: action.payload}
+        return { ...state, singleProductId: action.payload }
     }
 
     if (action.type === RESET_SINGLE_PRODUCT_ID) {
@@ -95,7 +95,7 @@ const productsReducer = (state: initialProductsStateType, action: any) => {
     }
     if (action.type === GET_PRODUCT_SUMMARY_SUCCESS) {
         // check if it returns the correct productDataType object instead of an array
-        return { ...state, summary:action.payload[0], summaryLoading: false }
+        return { ...state, summary: action.payload[0], summaryLoading: false }
     }
     if (action.type === GET_PRODUCT_SUMMARY_ERROR) {
         return { ...state, summaryError: true, summaryLoading: false }

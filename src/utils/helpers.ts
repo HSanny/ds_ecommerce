@@ -11,8 +11,7 @@ export const isValidSummary = (summary: any): summary is SummaryType => {
     }
 
     // Check if all required properties exist and are of correct types
-    return Array.isArray(summary.main_categories) &&
-        Array.isArray(summary.sub_categories) &&
+    return Array.isArray(summary.categories) &&
         Array.isArray(summary.all_ratings) &&
         typeof summary.max_actual_price === 'number' &&
         typeof summary.max_discount_price === 'number' &&

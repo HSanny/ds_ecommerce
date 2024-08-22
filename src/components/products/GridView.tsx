@@ -16,13 +16,13 @@ const GridView = () => {
             <div className="products-container">
                 {products.map(product => (
                     // similar to grid view
-                    <Link to={`/products/${product?.id}`} key={product?.id}>
+                    <Link to={`/products/${product?.product_id}`} key={product?.product_id}>
                         {/* Similar to above, display a preview or summary */}
                         <div>
-                            <img src={product?.image} alt={product?.name} />
-                            <h5>{product?.name}</h5>
+                            <img src={product?.img_link} alt={product?.product_name} />
+                            <h5>{product?.about_product}</h5>
                             <p>price: {product?.actual_price}</p>
-                            <p>discount price: {product?.discount_price}</p>
+                            <p>discount price: {product?.discounted_price}</p>
                         </div>
                     </Link>
 

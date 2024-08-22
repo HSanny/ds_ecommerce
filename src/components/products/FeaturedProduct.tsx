@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, Typography, Button, Grid, Card, CardMedia, CardContent, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Typography, Button, Card, CardMedia, CardContent, useTheme, useMediaQuery, Grid } from "@mui/material";
 import { useProductsContext } from "../../contexts/productsContext";
 
 const FeaturedProduct = () => {
@@ -9,60 +9,56 @@ const FeaturedProduct = () => {
   const { featuredProducts } = useProductsContext();
 
   return (
-    <Box sx={{ background: theme.palette.grey[200], padding: theme.spacing(4) }}>
+    <Box sx={{ background: theme.palette.grey[100], padding: theme.spacing(6) }}>
       {/* Header */}
-      <Typography variant="h2" gutterBottom component="div" sx={{ textAlign: 'center' }}>
-        Featured Product
-        <Box component="div" sx={{ height: 4, width: '100%', backgroundColor: theme.palette.primary.main, margin: 'auto', marginTop: theme.spacing(1) }} />
+      <Typography variant="h3" gutterBottom component="div" sx={{ textAlign: 'left', mb: 4 }}>
+        Ecommerce for any stage of your business journey
+        <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mt: 1 }}>
+          Get your first sale online, build steady sales, scale long-term.
+        </Typography>
       </Typography>
 
       {/* Featured Products */}
-      <Box
-        sx={{
-          display: 'flex',
-          overflowX: 'auto',
-          gap: theme.spacing(2),
-          padding: theme.spacing(2),
-          '&::-webkit-scrollbar': {
-            display: 'none',
-          },
-        }}
-      >
-        {featuredProducts.map(product => (
-          <Card
-            key={product.id}
-            component={RouterLink}
-            to={`/products/${product.id}`}
-            sx={{
-              minWidth: matches ? 280 : 200,
-              textDecoration: 'none',
-            }}
-          >
-            <CardMedia
-              component="img"
-              height="140"
-              image={product.image}
-              alt={product.name}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {product.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {product.actual_price}
-              </Typography>
-            </CardContent>
-          </Card>
+      <Grid container spacing={4}>
+        {featuredProducts.map((product, index) => (
+          <Grid item xs={12} md={4} key={product.product_id}>
+            <Card
+              component={RouterLink}
+              to={`/products/${product.product_id}`}
+              sx={{
+                textDecoration: 'none',
+                boxShadow: theme.shadows[3],
+                '&:hover': {
+                  boxShadow: theme.shadows[6],
+                },
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="240"
+                image={product.img_link}
+                alt={product.product_name}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h6" component="div">
+                  {product.product_name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {product.actual_price}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </Box>
+      </Grid>
 
       <Button
         variant="contained"
         component={RouterLink}
         to="/products"
-        sx={{ display: 'block', margin: 'auto', marginTop: theme.spacing(3) }}
+        sx={{ display: 'block', margin: 'auto', marginTop: theme.spacing(4) }}
       >
-        All Products
+        View All Products
       </Button>
     </Box>
   );

@@ -17,18 +17,18 @@ const ListView = () => {
         <ListViewWrapper>
             <div>
                 {products?.map(product => {
-                    const { id, image, name, actual_price, discount_price } = product
+                    const { product_id, img_link, product_name, actual_price, discounted_price } = product
                     return (
-                        <article key={id}>
-                            <Link to={`/products/${id}`}>
-                                <img src={image} alt={name} />
+                        <article key={product_id}>
+                            <Link to={`/products/${product_id}`}>
+                                <img src={img_link} alt={product_name} />
                             </Link>
 
                             <div>
-                                <h4>{name}</h4>
+                                <h4>{product_name}</h4>
                                 <h5>price: {actual_price}</h5>
-                                <h5>discount price: {discount_price}</h5>
-                                <Link to={`/products/${id}`} className="btn">
+                                <h5>discount price: {discounted_price}</h5>
+                                <Link to={`/products/${product_id}`} className="btn">
                                     Details
                                 </Link>
                             </div>

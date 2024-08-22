@@ -5,16 +5,16 @@ import { filterType } from "./filterTypes"
 import { SummaryType } from "./summaryType"
 
 export type productDataType = {
-    id: string
-    name: string
-    main_category: string
-    sub_category: string
+    product_id: string
+    product_name: string
+    category: string
     actual_price: string
-    discount_price: string
-    image: string
-    link: string
-    ratings: number
-    no_of_ratings: string
+    discounted_price: string
+    about_product: string
+    img_link: string
+    product_link: string
+    rating: number
+    rating_count: string
 }
 
 export type productDataTypeKey = keyof productDataType;

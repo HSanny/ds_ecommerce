@@ -50,7 +50,7 @@ const SingleProduct = () => {
       <Breadcrumbs separator={<NavigationNextIcon fontSize="small" />} aria-label="breadcrumb">
         <Link to="/">Home</Link>
         <Link to="/products">Products</Link>
-        <Typography color="text.primary">{singleProduct.name}</Typography>
+        <Typography color="text.primary">{singleProduct.product_name}</Typography>
       </Breadcrumbs>
 
       <Grid container spacing={4} sx={{ mt: 2 }}>
@@ -59,22 +59,22 @@ const SingleProduct = () => {
             <CardMedia
               component="img"
               height="400"
-              image={singleProduct?.image || '/static/images/default.png'}
-              alt={singleProduct?.name}
+              image={singleProduct?.img_link || '/static/images/default.png'}
+              alt={singleProduct?.product_name}
             />
           </Card>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Typography variant="h4" gutterBottom>{singleProduct.name}</Typography>
+          <Typography variant="h4" gutterBottom>{singleProduct.product_name}</Typography>
           <Typography variant="h6" color="text.secondary" gutterBottom>
             Price: {singleProduct.actual_price}
           </Typography>
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            Discount Price: {singleProduct.discount_price}
+            Discount Price: {singleProduct.discounted_price}
           </Typography>
           <Typography variant="body1" paragraph>
-            {singleProduct.name || "No description available for this product."}
+            {singleProduct.product_name || "No description available for this product."}
           </Typography>
           <Button variant="contained" color="primary" size="large">Buy Now</Button>
         </Grid>
