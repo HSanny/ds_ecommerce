@@ -1,4 +1,4 @@
-import CartButtonsWrapper from "./common/CartButtonsWrapper";
+import ButtonsWrapper from "./common/ButtonsWrapper";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useCartContext } from "../contexts/cartContext";
@@ -10,7 +10,7 @@ const CartButtons = () => {
     const { totalItems } = useCartContext()
 
     return (
-        <CartButtonsWrapper className="cart-btn-wrapper">
+        <ButtonsWrapper className="cart-btn-wrapper">
             <Link to="/cart" className="cart-btn" onClick={closeSidebar}>
                 Cart
                 <span className="cart-container">
@@ -20,7 +20,7 @@ const CartButtons = () => {
                     </span>
                 </span>
             </Link>
-        </CartButtonsWrapper>
+        </ButtonsWrapper>
     )
 }
 

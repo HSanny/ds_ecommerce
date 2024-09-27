@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const CartButtonsWrapper = styled.div`
+const ButtonsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
@@ -53,4 +53,4 @@ const CartButtonsWrapper = styled.div`
     }
   }
 `
-export default CartButtonsWrapper;
+export default ButtonsWrapper;

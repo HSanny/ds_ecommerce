@@ -6,6 +6,8 @@ import {
     GET_PRODUCTS_BEGIN,
     GET_PRODUCTS_SUCCESS,
     GET_PRODUCTS_ERROR,
+    SET_SINGLE_PRODUCT_ID,
+    RESET_SINGLE_PRODUCT_ID,
     GET_SINGLE_PRODUCT_BEGIN,
     GET_SINGLE_PRODUCT_SUCCESS,
     GET_SINGLE_PRODUCT_ERROR,
@@ -19,9 +21,8 @@ import { initialProductsStateType, productDataType } from "../types/productType"
 import axios from "axios"
 import { filterType, initialFilterState } from "../types/filterTypes";
 import { SummaryType, initialSummary } from "../types/summaryType";
-import { DATA_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
-import getCsrfToken, { isValidSummary } from "../utils/helpers";
-import AlertNotification from "../components/common/AlertNotification";
+import { ALL_PRODUCT_ENDPOINT, SINGLE_PRODUCT_ENDPOINT, SUMMARY_ENDPOINT } from "../utils/api";
+import axiosInstance from "../utils/axiosConfig";
 
 
 const initialProductsState: initialProductsStateType = {
@@ -29,9 +30,10 @@ const initialProductsState: initialProductsStateType = {
     products: [],
     totalPage: 0,
     featuredProducts: [],
-    singleProduct: {},
+    singleProduct: null,
     openSidebar: () => { },
     closeSidebar: () => { },
+    singleProductId: null,
     fetchSingleProduct: () => { },
     fetchAllProducts: () => { },
     updateFilter: () => { },
@@ -44,9 +46,11 @@ const initialProductsState: initialProductsStateType = {
     singleProductError: false,
     currPage: 0,
     filters: initialFilterState,
-    summary: {},
+    summary: initialSummary,
     summaryLoading: false,
     summaryError: false,
+    setSingleProductId: () => {},
+    resetSingleProductId: () => {}
 }
 
 const ProductsContext = React.createContext<initialProductsStateType>(initialProductsState)
@@ -58,10 +62,8 @@ export const useProductsContext = () => {
 export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = React.useReducer(productsReducer, initialProductsState);
     const [summary, setSummary] = React.useState<SummaryType>(initialSummary)
-    const [filter, setFilter] = React.useState<filterType>(initialFilterState)
     const [currPage, setCurrPage] = React.useState(1)
     console.log('state:', state)
-    console.log('summary:', summary)
 
     const [errorOpen, setErrorOpen] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
@@ -81,33 +83,32 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const fetchSummary = async () => {
         dispatch({
             type: GET_PRODUCT_SUMMARY_BEGIN
-        })
+        });
         try {
-            const response = await axios.get<SummaryType>(SUMMARY_ENDPOINT, {
-                withCredentials: true, // include credentials for CORS and CSRF
-            });
+            // Using axiosInstance which already has withCredentials set to true globally
+            const response = await axiosInstance.get<SummaryType>(SUMMARY_ENDPOINT);
 
             if (response) {
                 dispatch({
                     type: GET_PRODUCT_SUMMARY_SUCCESS,
                     payload: response.data
-                })
+                });
             } else {
-                setSummary(initialSummary)
+                setSummary(initialSummary);
             }
-            return response.data
+            return response.data;
         } catch (error) {
+            console.error('Error fetching product summary:', error);
             dispatch({
                 type: GET_PRODUCT_SUMMARY_ERROR
-            })
+            });
         }
     };
 
     const updateFilter = (filters: filterType) => {
-        setFilter(filters);
         dispatch({
             type: UPDATE_FILTER,
-            payload: filter
+            payload: filters
         })
     }
 
@@ -119,43 +120,22 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     // Fetch all products
     const fetchAllProducts = async (filter: filterType, page: number = 1) => {
-        dispatch({ type: GET_PRODUCTS_BEGIN })
+        dispatch({ type: GET_PRODUCTS_BEGIN });
         try {
-            const payload = {
+            const response = await axiosInstance.post(ALL_PRODUCT_ENDPOINT, {
                 filters: filter,
                 page: page,
-            }
-            // This is for get method
-            // const params = new URLSearchParams();
-            // // This will add each filter to the query parameters only if it has a value. 
-            // Object.keys(filters).forEach(key => {
-            //     // use type assertion
-            //     const value = filters[key as keyof filterType]
-            //     if (value != undefined) {
-            //         params.append(key, String(value));
-            //     }
-            // });
+            });
 
-            const csrfToken = getCsrfToken();
-            if (csrfToken) {
-                axios.defaults.headers.post['X-CSRFToken'] = csrfToken;
-            }
-            axios.defaults.withCredentials = true;
-            const response = await axios.post(DATA_ENDPOINT, JSON.stringify(payload), {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
             dispatch({
                 type: GET_PRODUCTS_SUCCESS,
                 payload: response.data
-            })
+            });
         } catch (error) {
-            dispatch({
-                type: GET_PRODUCTS_ERROR
-            })
+            console.error('Error fetching products:', error);
+            dispatch({ type: GET_PRODUCTS_ERROR });
         }
-    }
+    };
 
     React.useEffect(() => {
         fetchSummary()
@@ -165,30 +145,37 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         fetchAllProducts(state.filters, currPage)
     }, [currPage, state.filters])
 
-    const fetchSingleProduct = (name: string) => {
+    const setSingleProductId = (id: string) => {
+        dispatch({
+            type: SET_SINGLE_PRODUCT_ID,
+            payload: id
+        });
+    };
+
+    const resetSingleProductId = () => {
+        dispatch({
+            type: RESET_SINGLE_PRODUCT_ID
+        });
+    };
+
+    const fetchSingleProduct = React.useCallback(async (id: string) => {
         dispatch({
             type: GET_SINGLE_PRODUCT_BEGIN
         })
         try {
-            const singleProduct: productDataType = state.products.filter(
-                (product: productDataType) => product.name === name
-            )[0]
-
-            if (singleProduct) {
-                dispatch({
-                    type: GET_SINGLE_PRODUCT_SUCCESS,
-                    payload: singleProduct,
-                })
-            }
+            const response = await axios.get(`${SINGLE_PRODUCT_ENDPOINT}${id}/`);
+            const singleProduct: productDataType = response.data
+            dispatch({
+                type: GET_SINGLE_PRODUCT_SUCCESS,
+                payload: singleProduct,
+            })
         } catch (error: any) {
-            setErrorMessage(error)
+            console.error('Failed to fetch single product:', error)
             dispatch({
                 type: GET_SINGLE_PRODUCT_ERROR
             })
-            return <AlertNotification message={errorMessage} open={errorOpen} onClose={handleClose} severity="error" />
-
         }
-    }
+    }, [dispatch])
 
 
     return (
@@ -197,11 +184,12 @@ export const ProductsProvider: React.FC<PropsWithChildren> = ({ children }) => {
             fetchAllProducts,
             openSidebar,
             closeSidebar,
+            setSingleProductId,
+            resetSingleProductId,
             fetchSingleProduct,
-            setFilter,
             clearFilter,
             setCurrPage,
-            updateFilter
+            updateFilter,
         }}>
             {children}
         </ProductsContext.Provider>

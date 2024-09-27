@@ -5,7 +5,10 @@ import ScrollPage from './components/common/ScrollPage';
 import NaviBar from './components/NaviBar';
 import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
-import SingleProduct from './components/SingleProduct';
+import SingleProduct from './components/products/SingleProduct';
+import Login from './pages/Login';
+import SignUp from './pages/Signup';
+import PrivateRoute from './utils/PrivateRoute';
 
 function App() {
   const AppRoutes = createBrowserRouter([
@@ -21,48 +24,42 @@ function App() {
         {
           path: '/products',
           element: <ProductsPage />,
-      //     children: [
-      //       {
-      //         path: ':slug',
-      //         element: <SingleProduct />,
-      //       }
-      // ]
         },
         {
-          path: `/products/:slug`,
-          element: <SingleProduct />
+          path: '/products/:id',
+          element: <SingleProduct />,
+        },
+        {
+          path: `/shipment`,
+          element: <></>
+        },
+        {
+          path: `/authentication/login`,
+          element: <Login />,
+        },
+        {
+          path: '/authentication/sign-up',
+          element: <SignUp />
+        },
+        {
+          element: <PrivateRoute />, // protect the following routes
+          children: [
+            {
+              path: '/shipment',
+              element: <div> Shipment Page </div>
+            },
+            {
+              path: '/cart',
+              element: <div> Cart Page </div>
+            }
+          ]
         }
-    // {
-    //   index: true,
-    //   path: '/products/',
-    //   element: <SingleProduct />
-    // }
-    // {
-    //   index: true,
-    //   path: '/shipment',
-    //   element: <ShipmentPage />
-    // },
-    // {
-    //   index: true,
-    //   path: '/cart',
-    //   element: <CartPage />
-    // }
-  ]
+      ]
     },
   ])
-return (
-  <RouterProvider router={AppRoutes} />
-  // <BrowserRouter>
-  //   <Routes>
-  //     {routes.map((route) => (
-  //       <Route
-  //         path={route.path}
-  //         element={route.component}
-  //       />
-  //     ))}
-  //   </Routes>
-  // </BrowserRouter>
-);
+  return (
+    <RouterProvider router={AppRoutes} />
+  );
 }
 
 export default App;
@@ -73,7 +70,6 @@ const Layout = () => {
       <ScrollPage />
       <NaviBar />
       <Outlet /> {/* This will render the child routes */}
-      {/* <Footer /> Add your Footer component here if needed */}
       <Footer />
     </>
   )

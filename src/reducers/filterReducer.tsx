@@ -60,13 +60,13 @@ const filterReducer = (
         if (state.sort === 'name-a') {
             // a - z
             temp = temp.sort((a, b) => {
-                return a.name.localeCompare(b.name)
+                return a.product_name.localeCompare(b.product_name)
             })
         }
         if (state.sort === 'name-z') {
             // z - a
             temp = temp.sort((a, b) => {
-                return b.name.localeCompare(a.name)
+                return b.product_name.localeCompare(a.product_name)
             })
         }
         return { ...state, allProducts: temp }
@@ -81,7 +81,7 @@ const filterReducer = (
     }
 
     if (action.type === UPDATE_FILTERS_AND_FETCH) {
-        
+
     }
 
     // // filter products
@@ -89,7 +89,7 @@ const filterReducer = (
         const { allProducts } = state
         const {
             search,
-            main_category,
+            category,
             sub_category,
             // actual_price_gte,
             // actual_price_lte,
@@ -102,27 +102,23 @@ const filterReducer = (
         if (search) {
             temp = temp.filter(product => {
                 return (
-                    product?.name.toLowerCase().includes(search.toLowerCase()) ||
-                    product?.sub_category.toLowerCase().includes(search.toLowerCase())
+                    product?.product_name.toLowerCase().includes(search.toLowerCase()) ||
+                    product?.category.toLowerCase().includes(search.toLowerCase())
                 )
             })
         }
         // main category
-        if (main_category !== 'all') {
+        if (category !== 'all') {
             temp = temp.filter(product => {
-                return product?.main_category === main_category
+                return product?.category === category
             })
         }
         // sub category
-        if (sub_category !== 'all') {
-            temp = temp.filter(product => {
-                return product?.sub_category === sub_category
-            })
-        }
-        // price
-        // temp = temp.filter(product => {
-        //     return parseInt(product.actual_price) <= price
-        // })
+        // if (sub_category !== 'all') {
+        //     temp = temp.filter(product => {
+        //         return product?.sub_category === sub_category
+        //     })
+        // }
 
         return { ...state, filteredProducts: temp }
 

@@ -1,13 +1,13 @@
 import React from "react";
-import { useFilterContext } from "../contexts/filterContext";
-import { useProductsContext } from "../contexts/productsContext";
-import Loading from "./common/Loading";
+import { useFilterContext } from "../../contexts/filterContext";
+import { useProductsContext } from "../../contexts/productsContext";
+import Loading from "../common/Loading";
 import GridView from "./GridView";
 import ListView from "./ListView";
 
 const ProductList = () => {
 
-    
+
     const {
         gridView,
     } = useFilterContext()
@@ -31,7 +31,7 @@ const ProductList = () => {
 
     return (
         <>
-            {gridView ? <GridView/> : <ListView/>}
+            {gridView ? <GridView /> : <ListView />}
         </>
     )
 }

@@ -1,6 +1,5 @@
 export type SummaryType = {
-    main_categories: string[] | [],
-    sub_categories: string[] | [],
+    categories: string[] | [],
     all_ratings: number[]| [],
     max_actual_price: number,
     max_discount_price: number,
@@ -9,8 +8,7 @@ export type SummaryType = {
 }
 
 export const initialSummary: SummaryType = {
-    main_categories: [],
-    sub_categories: [],
+    categories: [],
     all_ratings: [],
     max_actual_price: 0,
     max_discount_price: 0,
